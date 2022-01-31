@@ -1,0 +1,23 @@
+[user]
+	name = DNLHC
+	email = gnz.danila@gmail.com
+[core]
+	editor = nvim
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red
+	newHighlight = green
+	newNormal = green
+	oldHighlight = red
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red
+	new = green
+	whitespace = red reverse
+[diff-so-fancy]
+	stripLeadingSymbols = false
+	markEmptyLines = false

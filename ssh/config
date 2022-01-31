@@ -1,0 +1,21 @@
+Host bitbucket.eddit.ru
+  HostName bitbucket.eddit.ru
+  Preferredauthentications publickey
+  IdentityFile /home/dan/.ssh/eddit
+
+Host github.com
+  HostName github.com
+  Preferredauthentications publickey
+  IdentityFile /home/dan/.ssh/github
+
+Host gitlab.com
+  HostName gitlab.com
+  Preferredauthentications publickey
+  IdentityFile /home/dan/.ssh/gitlab
+
+Host nuc
+  HostName 192.168.1.118
+  User dan
+  Preferredauthentications publickey
+  IdentityFile /home/dan/.ssh/nuc
+  IdentitiesOnly yes
