@@ -38,9 +38,27 @@ call plug#end()
 nmap j gj
 nmap k gk
 nmap <C-j> 4j
+xmap <C-j> 4j
 nmap <C-k> 4k
+xmap <C-k> 4k
+nmap - $
+xmap - $
 
-set clipboard=unnamedplus "yank to and paste the selection without prepending "*
+set clipboard+=unnamedplus "yank to and paste the selection without prepending "*
+
+" make clipboard work in WSL2
+let g:clipboard = {
+          \   'name': 'win32yank-wsl',
+          \   'copy': {
+          \      '+': '/opt/win32yank.exe -i --crlf',
+          \      '*': '/opt/win32yank.exe -i --crlf',
+          \    },
+          \   'paste': {
+          \      '+': '/opt/win32yank.exe -o --lf',
+          \      '*': '/opt/win32yank.exe -o --lf',
+          \   },
+          \   'cache_enabled': 0,
+          \ }
 
 if !exists('g:vscode')
 let mapleader = "\<Space>"
@@ -61,7 +79,6 @@ set number
 set hlsearch
 set ignorecase
 set smartcase
-set nohlsearch
 set hidden         "lets you switch buffers without saving
 
 set nobackup       "no backup files
@@ -81,12 +98,8 @@ command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 " Edit .vimrc
 map <leader>vo :vsp $MYVIMRC<CR>
 map <leader>vr :source $MYVIMRC<CR>
-" nmap <C-_> gcc
 
-" nnoremap <leader>b :BufExplorer<CR>
 
-" let g:bufExplorerDisableDefaultKeyMapping = 1
-" let g:bufExplorerShowRelativePath = 1
 
 " remove trailing whitespace
 autocmd BufWritePre * :%s/\s\+$//e
@@ -101,6 +114,7 @@ let g:NERDTreeIgnore = [
       \ 'node_modules',
       \ 'bower_components',
       \ 'tags',
+      \ '.yarn'
       \ ]
 
 let g:NERDTreeShowHidden = 1
@@ -108,26 +122,6 @@ let g:NERDTreeAutoDeleteBuffer = 1
 
 nmap <C-i> :NERDTreeToggle<CR>
 
-" let $FZF_DEFAULT_OPTS = '--layout=reverse --inline-info'
-" let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --ignore-file $HOME/.gitignore'
-" let g:fzf_tags_command = 'ctags -R'
-" let g:fzf_layout = {'up':'~50%', 'window': { 'width': 1, 'height': 0.5, 'yoffset':0, 'xoffset': 0 } }
-" let g:fzf_colors =
-" \ { 'fg':      ['fg', 'Normal'],
-"   \ 'bg':      ['bg', 'Normal'],
-"   \ 'hl':      ['fg', 'Comment'],
-"   \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-"   \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-"   \ 'hl+':     ['fg', 'Statement'],
-"   \ 'info':    ['fg', 'PreProc'],
-"   \ 'border':  ['fg', 'Ignore'],
-"   \ 'prompt':  ['fg', 'Conditional'],
-"   \ 'pointer': ['fg', 'Exception'],
-"   \ 'marker':  ['fg', 'Keyword'],
-"   \ 'spinner': ['fg', 'Label'],
-"   \ 'header':  ['fg', 'Comment'] }
-
-" nnoremap <silent> <C-p> :Files<CR>
 endif
 if exists('g:vscode')
 function! s:openWhichKeyInVisualMode()
@@ -144,6 +138,59 @@ function! s:openWhichKeyInVisualMode()
     endif
 endfunction
 
+function! s:vscodeGoToDefinition(str)
+    if exists('b:vscode_controlled') && b:vscode_controlled
+        call VSCodeNotify('editor.action.' . a:str)
+    else
+        " Allow to function in help files
+        exe "normal! \<C-]>"
+    endif
+endfunction
+
 nnoremap <silent> <Space> :call VSCodeNotify('whichkey.show')<CR>
 xnoremap <silent> <Space> :<C-u>call <SID>openWhichKeyInVisualMode()<CR>
+
+nnoremap gd <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
+xnoremap gd <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
+
+nnoremap gi <Cmd>call VSCodeNotify('editor.action.goToImplementation')<CR>
+xnoremap gi <Cmd>call VSCodeNotify('editor.action.goToImplementation')<CR>
+
+nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
+xnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
+
+nnoremap gs <Cmd>call VSCodeNotify('workbench.action.goToSymbol')<CR>
+xnoremap gs <Cmd>call VSCodeNotify('workbench.action.goToSymbol')<CR>
+
+nnoremap gt <Cmd>call VSCodeNotify('editor.action.goToTypeDefinition')<CR>
+xnoremap gt <Cmd>call VSCodeNotify('editor.action.goToTypeDefinition')<CR>
+
+nnoremap gI <Cmd>call VSCodeNotify('references-view.findImplementations')<CR>
+xnoremap gI <Cmd>call VSCodeNotify('references-view.findImplementations')<CR>
+
+nnoremap gR <Cmd>call VSCodeNotify('references-view.findReferences')<CR>
+xnoremap gR <Cmd>call VSCodeNotify('references-view.findReferences')<CR>
+
+nnoremap gS <Cmd>call VSCodeNotify('workbench.action.showAllSymbols)<CR>
+xnoremap gS <Cmd>call VSCodeNotify('workbench.action.showAllSymbols')<CR>
+
+nnoremap Gd <Cmd>call VSCodeNotify('editor.action.peekDefinition')<CR>
+xnoremap Gd <Cmd>call VSCodeNotify('editor.action.peekDefinition')<CR>
+
+nnoremap Gh <Cmd>call VSCodeNotify('editor.showCallHierarchy')<CR>
+xnoremap Gh <Cmd>call VSCodeNotify('editor.showCallHierarchy')<CR>
+
+nnoremap Gi <Cmd>call VSCodeNotify('editor.action.peekImplementation')<CR>
+xnoremap Gi <Cmd>call VSCodeNotify('editor.action.peekImplementation')<CR>
+
+nnoremap Gr <Cmd>call VSCodeNotify('editor.action.referenceSearch.trigger')<CR>
+xnoremap Gr <Cmd>call VSCodeNotify('editor.action.referenceSearch.trigger')<CR>
+
+nnoremap Gt <Cmd>call VSCodeNotify('editor.action.peekTypeDefinition')<CR>
+xnoremap Gt <Cmd>call VSCodeNotify('editor.action.peekTypeDefinition')<CR>
+
+nnoremap =w <Cmd>call VSCodeNotify('editor.action.formatDocument')<CR>
+nnoremap =W <Cmd>call VSCodeNotify('editor.action.formatDocument.multiple')<CR>
+
 endif
+
