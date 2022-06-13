@@ -3,6 +3,8 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-surround'
     Plug 'machakann/vim-highlightedyank'
     Plug 'tpope/vim-rsi'
+    Plug 'unblevable/quick-scope'
+    Plug 'mg979/vim-visual-multi', {'branch': 'master'}
   if !exists('g:vscode')
     Plug 'chriskempson/base16-vim'
     Plug 'tpope/vim-commentary'
@@ -19,7 +21,6 @@ call plug#begin('~/.local/share/nvim/plugged')
     " Plug 'junegunn/fzf', { 'do': { -> fzf#install()  } }
     " Plug 'junegunn/fzf.vim'
     Plug 'scrooloose/nerdtree'
-    Plug 'haya14busa/incsearch.vim'
     Plug 'hail2u/vim-css3-syntax'
     Plug 'elixir-lang/vim-elixir'
     Plug 'ap/vim-css-color', { 'for': ['css', 'scss', 'sass', 'html', 'eruby'] }
@@ -35,6 +36,16 @@ call plug#begin('~/.local/share/nvim/plugged')
   endif
 call plug#end()
 
+function! IsWSL()
+  if has('unix')
+    let lines = readfile('/proc/version')
+    if lines[0] =~ 'Microsoft'
+      return 1
+    endif
+  endif
+  return 0
+endfunction
+
 nmap j gj
 nmap k gk
 nmap <C-j> 4j
@@ -43,25 +54,40 @@ nmap <C-k> 4k
 xmap <C-k> 4k
 nmap - $
 xmap - $
+nnoremap ', '^
+nnoremap x "_x
+
+" provide hjkl movements in Command-line mode via the <Alt> modifier key
+inoremap <A-h> <C-o>h
+inoremap <A-j> <C-o>j
+inoremap <A-k> <C-o>k
+inoremap <A-l> <C-o>l
 
 set clipboard+=unnamedplus "yank to and paste the selection without prepending "*
 
 " make clipboard work in WSL2
-let g:clipboard = {
-          \   'name': 'win32yank-wsl',
-          \   'copy': {
-          \      '+': '/opt/win32yank.exe -i --crlf',
-          \      '*': '/opt/win32yank.exe -i --crlf',
-          \    },
-          \   'paste': {
-          \      '+': '/opt/win32yank.exe -o --lf',
-          \      '*': '/opt/win32yank.exe -o --lf',
-          \   },
-          \   'cache_enabled': 0,
-          \ }
+if IsWSL()
+  let g:clipboard = {
+            \   'name': 'win32yank-wsl',
+            \   'copy': {
+            \      '+': '/opt/win32yank.exe -i --crlf',
+            \      '*': '/opt/win32yank.exe -i --crlf',
+            \    },
+            \   'paste': {
+            \      '+': '/opt/win32yank.exe -o --lf',
+            \      '*': '/opt/win32yank.exe -o --lf',
+            \   },
+            \   'cache_enabled': 0,
+            \ }
+endif
 
 if !exists('g:vscode')
+
 let mapleader = "\<Space>"
+
+" Edit .vimrc
+map <leader>vo :vsp $MYVIMRC<CR>
+map <leader>vr :source $MYVIMRC<CR>
 
 syntax enable
 set termguicolors
@@ -94,12 +120,6 @@ set shiftwidth=2
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
-
-" Edit .vimrc
-map <leader>vo :vsp $MYVIMRC<CR>
-map <leader>vr :source $MYVIMRC<CR>
-
-
 
 " remove trailing whitespace
 autocmd BufWritePre * :%s/\s\+$//e
@@ -159,8 +179,11 @@ xnoremap gi <Cmd>call VSCodeNotify('editor.action.goToImplementation')<CR>
 nnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 xnoremap gr <Cmd>call VSCodeNotify('editor.action.goToReferences')<CR>
 
-nnoremap gs <Cmd>call VSCodeNotify('workbench.action.goToSymbol')<CR>
-xnoremap gs <Cmd>call VSCodeNotify('workbench.action.goToSymbol')<CR>
+nnoremap gs <Cmd>call VSCodeNotify('workbench.action.gotoSymbol')<CR>
+xnoremap gs <Cmd>call VSCodeNotify('workbench.action.gotoSymbol')<CR>
+
+" nnoremap gs <Cmd>call VSCodeNotify('workbench.action.goToSourceDefinition')<CR>
+" xnoremap gs <Cmd>call VSCodeNotify('workbench.action.goToSourceDefinition')<CR>
 
 nnoremap gt <Cmd>call VSCodeNotify('editor.action.goToTypeDefinition')<CR>
 xnoremap gt <Cmd>call VSCodeNotify('editor.action.goToTypeDefinition')<CR>
@@ -171,7 +194,7 @@ xnoremap gI <Cmd>call VSCodeNotify('references-view.findImplementations')<CR>
 nnoremap gR <Cmd>call VSCodeNotify('references-view.findReferences')<CR>
 xnoremap gR <Cmd>call VSCodeNotify('references-view.findReferences')<CR>
 
-nnoremap gS <Cmd>call VSCodeNotify('workbench.action.showAllSymbols)<CR>
+nnoremap gS <Cmd>call VSCodeNotify('workbench.action.showAllSymbols')<CR>
 xnoremap gS <Cmd>call VSCodeNotify('workbench.action.showAllSymbols')<CR>
 
 nnoremap Gd <Cmd>call VSCodeNotify('editor.action.peekDefinition')<CR>
@@ -191,6 +214,13 @@ xnoremap Gt <Cmd>call VSCodeNotify('editor.action.peekTypeDefinition')<CR>
 
 nnoremap =w <Cmd>call VSCodeNotify('editor.action.formatDocument')<CR>
 nnoremap =W <Cmd>call VSCodeNotify('editor.action.formatDocument.multiple')<CR>
+
+nnoremap =c <Cmd>call VSCodeNotify('editor.action.formatChanges')<CR>
+
+nnoremap ? <Cmd>call VSCodeNotify('workbench.action.findInFiles', { 'query': expand('<cword>') })<CR>
+
+highlight QuickScopePrimary guifg='#21a2c2' gui=underline ctermfg=155 cterm=underline
+highlight QuickScopeSecondary guifg='#128b85' gui=underline ctermfg=81 cterm=underline
 
 endif
 
