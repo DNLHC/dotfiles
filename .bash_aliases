@@ -1,13 +1,12 @@
 #!/bin/bash
 
-alias P='cd ~/Documents/projects'
+alias P='cd ~/projects'
 alias D='cd ~/Downloads'
 alias ls='ls --color'
 
 alias update='sudo apt update && sudo apt upgrade'
 alias deb='sudo dpkg -i'
 alias r='npm run'
-bind -x '"\C-p":"fzf"'
 
 alias sshp="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
 alias boldssh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
