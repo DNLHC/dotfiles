@@ -14,14 +14,6 @@ function M.setup(on_attach)
   local diagnostics = builtins.diagnostics
   local code_actions = builtins.code_actions
 
-  local cspell_extra_args = {
-    '--config',
-    '~/.config/nvim/utils/cspell.json',
-    '-u',
-    '--no-progress',
-    '--no-summary',
-  }
-
   null_ls.setup({
     sources = {
       formatting.stylua,
@@ -33,23 +25,14 @@ function M.setup(on_attach)
           ),
         },
       }),
-
       code_actions.eslint_d,
       typescript_code_actions,
-      -- code_actions.gitsigns,
-
       diagnostics.stylelint.with({
         extra_filetypes = { 'pcss', 'astro' },
       }),
       diagnostics.eslint_d.with({
-        extra_args = { '--no-error-on-unmatched-pattern' },
+        extra_args = { '--no-error-on-unmatched-pattern' }, -- don't remember why but it's there
       }),
-      -- diagnostics.cspell.with({
-      --   extra_args = cspell_extra_args,
-      -- }),
-      -- code_actions.cspell.with({
-      --   extra_args = cspell_extra_args,
-      -- }),
     },
     debounce = 250,
     debug = false,

@@ -1,5 +1,8 @@
 pcall(require, 'impatient')
-require('core.colorscheme')
+
+if not vim.g.vscode then
+  require('core.colorscheme')
+end
 
 vim.g.mapleader = ' '
 

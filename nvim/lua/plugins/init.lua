@@ -1,17 +1,82 @@
 ---@diagnostic disable: different-requires
-return {
+local common_plugins = {
+  'tpope/vim-repeat',
+  {
+    'kylechui/nvim-surround',
+    keys = {
+      'ys',
+      'yS',
+      'cs',
+      'ds',
+      { 'S', mode = 'x' },
+    },
+    config = function()
+      require('nvim-surround').setup({})
+    end,
+  },
+  {
+    'echasnovski/mini.jump',
+    keys = {
+      { 'F', mode = { 'n', 'x' } },
+      { 'f', mode = { 'n', 'x' } },
+      { 't', mode = { 'n', 'x' } },
+      { 'T', mode = { 'n', 'x' } },
+    },
+    opts = {
+      mappings = {
+        repeat_jump = '',
+      },
+      delay = {
+        -- Delay between jump and highlighting all possible jumps
+        highlight = 250,
+        -- Delay between jump and automatic stop if idle (no jump is done)
+        idle_stop = 10000000,
+      },
+    },
+    config = function(_, opts)
+      require('mini.jump').setup(opts)
+    end,
+  },
+}
+
+local cli_plugins = {
+  'tpope/vim-unimpaired',
   'lewis6991/impatient.nvim',
   'ojroques/nvim-osc52',
-  'tpope/vim-repeat',
   'tpope/vim-sleuth',
-  'tpope/vim-unimpaired',
   { cmd = 'Git', 'tpope/vim-fugitive' },
   'nvim-lua/plenary.nvim',
   {
-    'lukas-reineke/indent-blankline.nvim',
-    opts = { char = '▏' },
-    config = function(_, opts)
-      require('indent_blankline').setup(opts)
+    'L3MON4D3/LuaSnip',
+    -- follow latest release.
+    version = '2.*', -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+    -- install jsregexp (optional!).
+    build = 'make install_jsregexp',
+  },
+  {
+    'mbbill/undotree',
+    cmd = { 'UndotreeToggle' },
+    config = function()
+      vim.g.undotree_SetFocusWhenToggle = 1
+      vim.g.undotree_HelpLine = 0
+      vim.g.undotree_DiffpanelHeight = 15
+      vim.g.undotree_SplitWidth = 35
+    end,
+  },
+  {
+    'ThePrimeagen/harpoon',
+    config = function()
+      local harpoon_mark = require('harpoon.mark')
+      local harpoon_ui = require('harpoon.ui')
+      vim.keymap.set('n', '<leader>ha', harpoon_mark.add_file)
+      vim.keymap.set('n', '<leader>hh', harpoon_ui.toggle_quick_menu)
+      vim.keymap.set('n', '<C-h>', harpoon_ui.nav_prev)
+      vim.keymap.set('n', '<C-l>', harpoon_ui.nav_next)
+      for i = 1, 9, 1 do
+        vim.keymap.set('n', '<leader>h' .. i, function()
+          harpoon_ui.nav_next(i)
+        end)
+      end
     end,
   },
   {
@@ -27,16 +92,12 @@ return {
       autocmd = { enabled = true },
       sign = {
         enable = true,
+        text = require('core.globals').code_action_sign,
+        hl = '',
       },
     },
     config = function(_, opts)
       require('nvim-lightbulb').setup(opts)
-      vim.fn.sign_define('LightBulbSign', {
-        text = require('core.globals').code_action_sign,
-        texthl = '',
-        linehl = '',
-        numhl = '',
-      })
     end,
   },
   {
@@ -58,29 +119,39 @@ return {
     end,
   },
   {
-    'kylechui/nvim-surround',
+    'echasnovski/mini.comment',
+    version = false,
     keys = {
-      'ys',
-      'yS',
-      'cs',
-      'ds',
-      { 'S', mode = 'x' },
+      { 'gc', mode = { 'x', 'n' } },
     },
-    config = function()
-      require('nvim-surround').setup({})
+    opts = function()
+      return {
+        hooks = {
+          pre = function()
+            require('ts_context_commentstring.internal').update_commentstring()
+          end,
+        },
+      }
+    end,
+    config = function(_, opts)
+      require('mini.comment').setup(opts)
     end,
   },
   {
-    'numToStr/Comment.nvim',
-    keys = {
-      { 'gc', mode = { 'x', 'n' } },
-      { 'gb', mode = { 'x', 'n' } },
+    'echasnovski/mini.pairs',
+    event = { 'InsertEnter' },
+    version = false,
+    opts = {
+      mappings = {
+        [' '] = {
+          action = 'open',
+          pair = '  ',
+          neigh_pattern = '[%(%[{][%)%]}]',
+        },
+      },
     },
-    opts = function()
-      return require('plugins.configs.comment')
-    end,
     config = function(_, opts)
-      require('Comment').setup(opts)
+      require('mini.pairs').setup(opts)
     end,
   },
   {
@@ -125,29 +196,6 @@ return {
   },
   { 'echasnovski/mini.bufremove', lazy = true },
   {
-    'echasnovski/mini.jump',
-    keys = {
-      { 'F', mode = { 'n', 'x' } },
-      { 'f', mode = { 'n', 'x' } },
-      { 't', mode = { 'n', 'x' } },
-      { 'T', mode = { 'n', 'x' } },
-    },
-    opts = {
-      mappings = {
-        repeat_jump = '',
-      },
-      delay = {
-        -- Delay between jump and highlighting all possible jumps
-        highlight = 250,
-        -- Delay between jump and automatic stop if idle (no jump is done)
-        idle_stop = 10000000,
-      },
-    },
-    config = function(_, opts)
-      require('mini.jump').setup(opts)
-    end,
-  },
-  {
     'nvim-telescope/telescope.nvim',
     dependencies = {
       {
@@ -173,27 +221,6 @@ return {
       require('bqf').setup(opts)
     end,
   },
-  -- 'tpope/vim-dadbod',
-  -- 'kristijanhusak/vim-dadbod-completion',
-  -- {
-  --   'kristijanhusak/vim-dadbod-ui',
-  --   config = function()
-  --     vim.g.db_ui_auto_execute_table_helpers = 1
-  --     vim.g.db_ui_show_help = 0
-  --     local globals = require('core.globals')
-  --     vim.g.db_ui_icons = {
-  --       expanded = globals.arrow_open,
-  --       collapsed = globals.arrow_closed,
-  --       saved_query = '*',
-  --       new_query = '+',
-  --       tables = '~',
-  --       buffers = '»',
-  --       connection_ok = '✓',
-  --       connection_error = '✕',
-  --     }
-  --   end,
-  -- },
-
   {
     'lewis6991/gitsigns.nvim',
     opts = function()
@@ -214,33 +241,59 @@ return {
     end,
   },
   {
-    'norcalli/nvim-colorizer.lua',
-    lazy = true,
-    init = function()
-      vim.schedule(function()
-        require('lazy').load({ plugins = 'nvim-colorizer.lua' })
-      end, 0)
-    end,
-    config = function()
-      require('colorizer').setup({
-        '*',
-        '!packer',
-        '!lazy',
-        css = { rgb_fn = true },
-      }, {
-        names = false,
-        RRGGBBAA = true,
+    'echasnovski/mini.hipatterns',
+    event = 'BufReadPre',
+    version = false,
+    config = function(_, opts)
+      local hipatterns = require('mini.hipatterns')
+      hipatterns.setup({
+        highlighters = {
+          -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+          fixme = {
+            pattern = '%f[%w]()FIXME()%f[%W]',
+            group = 'MiniHipatternsFixme',
+          },
+          hack = {
+            pattern = '%f[%w]()HACK()%f[%W]',
+            group = 'MiniHipatternsHack',
+          },
+          todo = {
+            pattern = '%f[%w]()TODO()%f[%W]',
+            group = 'MiniHipatternsTodo',
+          },
+          note = {
+            pattern = '%f[%w]()NOTE()%f[%W]',
+            group = 'MiniHipatternsNote',
+          },
+          -- Highlight hex color strings (`#rrggbb`) using that color
+          hex_color = hipatterns.gen_highlighter.hex_color(),
+        },
       })
-
-      vim.defer_fn(function()
-        require('colorizer').attach_to_buffer(0)
-      end, 0)
+      local augroup =
+        vim.api.nvim_create_augroup('HiPatternsFiletype', { clear = true })
+      vim.api.nvim_create_autocmd('FileType', {
+        group = augroup,
+        pattern = {
+          'help',
+          'NvimTree',
+          'DiffviewFiles',
+          'qf',
+          'lspinfo',
+          'tsplayground',
+          'query',
+          'checkhealth',
+          'fugitive',
+          'toggleterm',
+        },
+        command = 'lua vim.b.minihipatterns_disable = true',
+      })
     end,
   },
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     dependencies = {
+      'p00f/nvim-ts-rainbow',
       'nvim-treesitter/nvim-treesitter-textobjects',
       'windwp/nvim-ts-autotag',
       'RRethy/nvim-treesitter-endwise',
@@ -269,7 +322,10 @@ return {
       require('lsp').config()
     end,
   },
-  'jose-elias-alvarez/null-ls.nvim',
+  {
+    'jose-elias-alvarez/null-ls.nvim',
+    dependencies = { 'davidmh/cspell.nvim' },
+  },
   {
     'hrsh7th/nvim-cmp',
     event = { 'InsertEnter', 'CmdlineEnter' },
@@ -277,79 +333,13 @@ return {
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'hrsh7th/cmp-buffer' },
       { 'hrsh7th/cmp-nvim-lua' },
-      { 'saadparwaiz1/cmp_luasnip' },
-      { 'hrsh7th/cmp-cmdline' },
       { 'hrsh7th/cmp-path' },
+      { 'hrsh7th/cmp-cmdline' },
       { 'hrsh7th/cmp-nvim-lsp-signature-help' },
-      {
-        'windwp/nvim-autopairs',
-        opts = {
-          check_ts = true,
-          fast_wrap = {},
-        },
-        config = function(_, opts)
-          local npairs = require('nvim-autopairs')
-          local Rule = require('nvim-autopairs.rule')
-          npairs.setup(opts)
-
-          -- Add spaces between parentheses
-          npairs.add_rules({
-            Rule(' ', ' '):with_pair(function(_opts)
-              local pair = _opts.line:sub(_opts.col - 1, _opts.col)
-              return vim.tbl_contains({ '()', '[]', '{}' }, pair)
-            end),
-            Rule('( ', ' )')
-              :with_pair(function()
-                return false
-              end)
-              :with_move(function(_opts)
-                return _opts.prev_char:match('.%)') ~= nil
-              end)
-              :use_key(')'),
-            Rule('{ ', ' }')
-              :with_pair(function()
-                return false
-              end)
-              :with_move(function(_opts)
-                return _opts.prev_char:match('.%}') ~= nil
-              end)
-              :use_key('}'),
-            Rule('[ ', ' ]')
-              :with_pair(function()
-                return false
-              end)
-              :with_move(function(_opts)
-                return _opts.prev_char:match('.%]') ~= nil
-              end)
-              :use_key(']'),
-          })
-        end,
-      },
-      {
-        'zbirenbaum/copilot.lua',
-        opts = {
-          copilot_node_command = vim.fn.expand('$HOME')
-            .. '/.volta/tools/image/node/16.20.0/bin/node',
-        },
-        config = function(_, opts)
-          require('copilot').setup(opts)
-        end,
-      },
       {
         'zbirenbaum/copilot-cmp',
         config = function()
           require('copilot_cmp').setup()
-        end,
-      },
-      {
-        'L3MON4D3/LuaSnip',
-        dependencies = 'rafamadriz/friendly-snippets',
-        opts = { history = true, updateevents = 'TextChanged,TextChangedI' },
-        config = function(_, opts)
-          local luasnip = require('luasnip')
-          luasnip.config.set_config(opts)
-          luasnip.filetype_extend('typescript', { 'javascript' })
-          luasnip.filetype_extend('typescriptreact', { 'javascript' })
         end,
       },
     },
@@ -357,4 +347,24 @@ return {
       require('plugins.configs.cmp')
     end,
   },
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    opts = {
+      copilot_node_command = vim.fn.expand('$HOME')
+        .. '/.volta/tools/image/node/20.9.0/bin/node',
+    },
+    config = function(_, opts)
+      require('copilot').setup(opts)
+    end,
+  },
 }
+
+if not vim.g.vscode then
+  for i = 1, #cli_plugins do
+    common_plugins[#common_plugins + 1] = cli_plugins[i]
+  end
+end
+
+return common_plugins

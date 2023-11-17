@@ -9,6 +9,8 @@ set ignorecase
 set nobackup
 set noswapfile
 set nowritebackup
+set splitbelow
+set splitright
 set background=light
 set backspace=indent,eol,start
 set hidden
@@ -33,6 +35,7 @@ xmap ; :
 
 nnoremap <leader>qq :q<CR>
 nnoremap <leader>qQ :q!<CR>
+cmap w!! w !sudo tee > /dev/null %
 
 let g:mc = "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>"
 

@@ -43,6 +43,7 @@ M.light_palette = {
   fg3d = '#464646',
   fg4d = '#5d5d5d',
   fg5d = '#767676',
+  fg6d = '#9d9d9d',
 
   selection = '#c2ddfc',
   search = '#f0ebb4',
@@ -62,7 +63,7 @@ M.light_palette = {
   orange = '#C48B00',
   punctuation = '#555555',
   diff = {
-    add = '#89d5a0',
+    add = '#80c895',
     remove = '#f99b9b',
     change = '#d5c489',
   },

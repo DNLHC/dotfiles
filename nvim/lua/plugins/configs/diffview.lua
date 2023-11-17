@@ -15,7 +15,7 @@ return {
     diff_buf_win_enter = function()
       vim.wo.wrap = false
       vim.wo.list = false
-      vim.wo.number = true
+      vim.wo.number = false
       vim.wo.statuscolumn = ''
       vim.wo.signcolumn = 'no'
     end,

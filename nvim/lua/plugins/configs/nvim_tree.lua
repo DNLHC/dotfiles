@@ -7,7 +7,6 @@ local function on_attach(bufnr)
   -- BEGIN_DEFAULT_ON_ATTACH
   vim.keymap.set('n', '<C-]>', api.tree.change_root_to_node, opts)
   vim.keymap.set('n', '<C-e>', api.node.open.replace_tree_buffer, opts)
-  vim.keymap.set('n', '<C-k>', api.node.show_info_popup, opts)
   vim.keymap.set('n', '<C-r>', api.fs.rename_sub, opts)
   vim.keymap.set('n', '<C-t>', api.node.open.tab, opts)
   vim.keymap.set('n', '<C-v>', api.node.open.vertical, opts)
@@ -23,7 +22,7 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'bmv', api.marks.bulk.move, opts)
   vim.keymap.set('n', 'bd', function()
     local nodes = api.marks.list()
-    for index, node in ipairs(nodes) do
+    for _, node in ipairs(nodes) do
       api.fs.remove(node)
       api.marks.toggle(node)
     end
@@ -67,21 +66,6 @@ local function on_attach(bufnr)
   vim.keymap.set('n', '<2-RightMouse>', api.tree.change_root_to_node, opts)
   -- END_DEFAULT_ON_ATTACH
 
-  -- Mappings removed via:
-  --   remove_keymaps
-  --   OR
-  --   view.mappings.list..action = ""
-  --
-  -- The dummy set before del is done for safety, in case a default mapping does not exist.
-  --
-  -- You might tidy things by removing these along with their default mapping.
-  vim.keymap.set('n', '.', '', { buffer = bufnr })
-  vim.keymap.del('n', '.', { buffer = bufnr })
-  vim.keymap.set('n', '<C-k>', '', { buffer = bufnr })
-  vim.keymap.del('n', '<C-k>', { buffer = bufnr })
-  vim.keymap.set('n', '<C-.>', '', { buffer = bufnr })
-  vim.keymap.del('n', '<C-.>', { buffer = bufnr })
-
   -- Mappings migrated from view.mappings.list
   --
   -- You will need to insert "your code goes here" for any mappings with a custom action_cb
@@ -96,7 +80,7 @@ return {
   update_focused_file = { enable = true },
   update_cwd = false,
   filters = {
-    custom = { 'node_modules', 'vendor' },
+    custom = { 'node_modules', 'vendor', '^\\.git$', '^\\.hg$' },
   },
   diagnostics = {
     enable = true,

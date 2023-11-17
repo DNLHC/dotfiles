@@ -43,7 +43,7 @@ local treesitter_migrate = function(p)
 
     ['keyword'] = 'TSKeyword',
     ['keyword.function'] = 'TSKeywordFunction',
-    ['keyword.operator'] = 'TSKeywordOperator',
+    ['keyword.operator'] = 'TSKeyword',
     ['keyword.return'] = 'TSKeywordReturn',
 
     ['label'] = 'TSLabel',
@@ -110,7 +110,7 @@ local treesitter_migrate = function(p)
 
     ['variable'] = 'TSVariable',
     ['variable.builtin'] = 'TSVariableBuiltin',
-    ['method.vue'] = 'TSKeyword'
+    ['method.vue'] = 'TSKeyword',
   }
 
   for capture, hlgroup in pairs(map) do

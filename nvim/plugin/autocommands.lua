@@ -1,12 +1,5 @@
 local augroup = vim.api.nvim_create_augroup('CustomCommands', { clear = true })
 
--- Start terminal mode in insert mode and disable some options
-vim.api.nvim_create_autocmd('TermOpen', {
-  group = augroup,
-  pattern = '*',
-  command = 'startinsert | setlocal winfixheight nospell norelativenumber nonumber signcolumn=no scrolloff=0 statuscolumn=',
-})
-
 -- Highlight yanks
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = augroup,
@@ -19,46 +12,56 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Show cursor line only in active window
-local cl_group =
-  vim.api.nvim_create_augroup('CursorLineControl', { clear = true })
+if not vim.g.vscode then
+  -- Start terminal mode in insert mode and disable some options
+  vim.api.nvim_create_autocmd('TermOpen', {
+    group = augroup,
+    pattern = '*',
+    command = 'startinsert | setlocal winfixheight nospell norelativenumber nonumber signcolumn=no scrolloff=0 statuscolumn=',
+  })
+  local function update_lead()
+    local lcs = vim.opt_local.listchars:get()
+    local tab = vim.fn.str2list(lcs.tab)
+    local space = vim.fn.str2list(lcs.multispace or lcs.space)
+    local lead = { tab[1] }
+    for i = 1, vim.bo.tabstop - 1 do
+      lead[#lead + 1] = space[i % #space + 1]
+    end
+    vim.opt_local.listchars:append({ leadmultispace = vim.fn.list2str(lead) })
+  end
 
-local set_cursorline = function(event, value, pattern)
-  vim.api.nvim_create_autocmd(event, {
-    group = cl_group,
-    pattern = pattern,
-    callback = function()
-      vim.opt_local.cursorline = value
+  vim.api.nvim_create_autocmd(
+    'OptionSet',
+    { pattern = { 'listchars', 'tabstop', 'filetype' }, callback = update_lead }
+  )
+  vim.api.nvim_create_autocmd(
+    'VimEnter',
+    { callback = update_lead, once = true }
+  )
+
+  -- Windows to close with "q"
+  vim.api.nvim_create_autocmd('FileType', {
+    group = augroup,
+    pattern = {
+      'help',
+      'startuptime',
+      'qf',
+      'lspinfo',
+      'tsplayground',
+      'query',
+      'checkhealth',
+      'fugitive',
+    },
+    callback = function(opts)
+      vim.keymap.set('n', 'q', '<CMD>close<CR>', { buffer = opts.buf })
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('FileType', {
+    group = augroup,
+    pattern = 'man',
+    callback = function(opts)
+      vim.keymap.set('n', 'q', '<CMD>quit<CR>', { buffer = opts.buf })
     end,
   })
 end
-
--- set_cursorline('WinLeave', false)
--- set_cursorline('WinEnter', true)
--- set_cursorline('FileType', false, 'TelescopePrompt')
-
--- Windows to close with "q"
-vim.api.nvim_create_autocmd('FileType', {
-  group = augroup,
-  pattern = {
-    'help',
-    'startuptime',
-    'qf',
-    'lspinfo',
-    'tsplayground',
-    'query',
-    'checkhealth',
-    'fugitive',
-  },
-  callback = function(opts)
-    vim.keymap.set('n', 'q', '<CMD>close<CR>', { buffer = opts.buf })
-  end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = augroup,
-  pattern = 'man',
-  callback = function(opts)
-    vim.keymap.set('n', 'q', '<CMD>quit<CR>', { buffer = opts.buf })
-  end,
-})

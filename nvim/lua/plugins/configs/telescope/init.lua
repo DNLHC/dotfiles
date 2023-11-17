@@ -1,5 +1,3 @@
-local M = {}
-
 local ignore_glob = {
   '**/.git/*',
   '**/.hg/*',
@@ -34,8 +32,8 @@ local function find_or_git_files()
   builtin.find_files({
     find_command = {
       'rg',
-      '--files',
       '--hidden',
+      '--files',
       '--color',
       'never',
       '-g',
@@ -52,8 +50,7 @@ local map = vim.keymap.set
 map('n', '<C-p>', find_or_git_files)
 map('n', '<leader>/', '<CMD>Telescope live_grep<CR>')
 map('n', '<leader>?', '<CMD>Telescope grep_string<CR>')
-map('n', '<leader>sr', ':%s//<left>') -- Search and replace
-map('x', '<leader>sr', ':s//<left>') -- Search and replace
+map('x', '<leader>sr', '<CMD>Telescope resume<CR>') -- Search and replace
 map('n', '<leader>s?', grep_string_in_path)
 map('n', '<leader>sf', find_files_in_path)
 map('n', '<leader>s/', live_grep_in_path)
@@ -112,7 +109,7 @@ return {
       width = 1,
     },
     borderchars = {
-      prompt = { '─', '', '', '', '─', '─', '', '' },
+      prompt = { '─', '', '─', '', '─', '─', '', '' },
       results = { '' },
       preview = { '', '', '', '│', '│', '', '', '│' },
     },

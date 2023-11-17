@@ -29,6 +29,7 @@ function M.get(config, p)
     TermCursorNC = { fg = p.bg, bg = p.fg, ctermfg = '14', ctermbg = '15' },
     CursorLine = { bg = p.bg1u },
     CursorLineNr = { fg = p.fg },
+    LineNr = { fg = p.fg5d },
     -- CursorLineSign = { bg = p.bg1u },
     CursorLineFold = { bg = p.bg1u },
     DarkenedPanel = { bg = groups.panel },
@@ -54,7 +55,7 @@ function M.get(config, p)
       fg = blend(groups.panel, groups.background, 0.85),
     },
     Directory = { fg = p.fg, bg = p.none },
-    EndOfBuffer = { fg = styles.background },
+    EndOfBuffer = { fg = p.fg6d },
     ErrorMsg = { fg = groups.error },
     FloatBorder = { fg = groups.float_bg, bg = groups.float_bg },
     FloatTitle = { link = 'FloatBorder' },
@@ -64,11 +65,10 @@ function M.get(config, p)
     IncSearch = { link = 'Search' },
     CurSearch = { bg = p.cur_search },
     HighlightedyankRegion = { bg = p.yank },
-    LineNr = { fg = p.fg5d },
     MatchParen = { bg = p.bg4u },
     ModeMsg = { fg = p.fg, bold = true },
     MoreMsg = { fg = p.fg2d },
-    NonText = { fg = p.fg4d },
+    NonText = { fg = p.bg2u },
     Normal = { fg = p.fg, bg = styles.background },
     NormalFloat = { fg = p.fg, bg = groups.float_bg },
     NormalNC = { fg = p.fg, bg = styles.nc_background },
@@ -199,6 +199,11 @@ function M.get(config, p)
     DiffviewFilePanelFilePanelPath = { fg = p.fg4d, bold = false },
     DiffviewFilePanelPath = { fg = p.fg4d, bold = false },
 
+    HarpoonBorder = { fg = p.bg2u, bg = p.bg2u },
+    HarpoonWindow = { bg = p.bg2u },
+
+    UndotreeTimestamp = { fg = p.fg5d },
+
     DefinitionCount = { fg = p.fg },
     DefinitionIcon = { fg = p.fg },
     DefintionPreviewTitle = { fg = p.fg, bold = true },
@@ -265,7 +270,7 @@ function M.get(config, p)
     NvimTreeIndentMarker = { fg = p.fg5d },
 
     -- luka-reineke/indent-blankline.nvim
-    IndentBlanklineChar = { fg = p.bg2u },
+    IndentBlanklineChar = { link = 'NonText' },
 
     -- hrsh7th/nvim-cmp
     CmpItemAbbr = { fg = p.fg2d },

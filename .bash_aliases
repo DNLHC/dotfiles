@@ -10,6 +10,8 @@ alias r='npm run'
 
 alias sshp="ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
 alias boldssh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias removezone='find . -name "*:Zone.Identifier" -type f -delete'
+alias explorer.exe='/mnt/c/Windows/explorer.exe'
 
 # git shortcuts
 alias gst='git status'
@@ -28,3 +30,4 @@ alias gbg='git bisect good'
 alias gbb='git bisect bad'
 alias gpod='git push origin develop'
 alias gpom='git push origin master'
+alias code='code-insiders'

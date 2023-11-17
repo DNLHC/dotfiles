@@ -6,7 +6,7 @@ local M = {
   arrow_closed = '',
   arrow_open = '',
 
-  code_action_sign = '⚡',
+  code_action_sign = '',
 }
 
 return M

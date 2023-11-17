@@ -50,10 +50,8 @@ cmp.setup({
       if cmp.visible() then
         cmp.confirm({
           select = true,
-          behavior = cmp.ConfirmBehavior.Replace,
+          behavior = cmp.ConfirmBehavior.Insert,
         })
-      elseif luasnip.jumpable(1) then
-        luasnip.jump(1)
       elseif copilot_suggestions.is_visible() then
         copilot_suggestions.accept()
       else
@@ -61,22 +59,13 @@ cmp.setup({
       end
     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function()
-      if luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        cmp.complete()
-      end
+      cmp.complete()
     end, { 'i', 's' }),
   }),
   sources = cmp.config.sources({
-    { name = 'copilot' },
     { name = 'nvim_lsp', keyword_length = 2 },
+    { name = 'copilot' },
     { name = 'nvim_lsp_signature_help' },
-    {
-      name = 'luasnip',
-      keyword_length = 2,
-      max_item_count = 2,
-    },
     { name = 'nvim_lua', keyword_length = 3 },
     { name = 'path' },
   }, {
@@ -87,22 +76,6 @@ cmp.setup({
   },
 })
 
--- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline('/', {
-  mapping = cmp.mapping.preset.cmdline({
-    ['<Tab>'] = cmp.mapping(
-      cmp.mapping.confirm({ select = true }),
-      { 'i', 'c' }
-    ),
-    ['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
-    ['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
-  }),
-  sources = {
-    { name = 'buffer' },
-  },
-})
-
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline({
     ['<Tab>'] = cmp.mapping(function()
@@ -123,4 +96,18 @@ cmp.setup.cmdline(':', {
   }, {
     { name = 'cmdline' },
   }),
+})
+
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline({
+    ['<Tab>'] = cmp.mapping(
+      cmp.mapping.confirm({ select = true }),
+      { 'i', 'c' }
+    ),
+    ['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
+    ['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+  }),
+  sources = {
+    { name = 'buffer' },
+  },
 })
