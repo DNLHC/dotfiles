@@ -11,7 +11,20 @@ function M.config()
   local global_border = require('core.globals').border
 
   mason.setup({ ui = { border = global_border } })
-  lsp_installer.setup({})
+  lsp_installer.setup({
+    ensure_installed = {
+      'lua_ls',
+      'jsonls',
+      'emmet_ls',
+      'html',
+      'cssls',
+      'tailwindcss',
+      'volar',
+      'tsserver',
+      'yamlls',
+      'bashls',
+    },
+  })
 
   -- Override open_floating_preview function to enable borders globally
   local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
