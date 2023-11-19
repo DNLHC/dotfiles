@@ -80,13 +80,6 @@ local cli_plugins = {
     end,
   },
   {
-    '~/projects/nvim-pqf',
-    dev = true,
-    config = function()
-      require('pqf').setup()
-    end,
-  },
-  {
     'kosayoda/nvim-lightbulb',
     opts = {
       autocmd = { enabled = true },
