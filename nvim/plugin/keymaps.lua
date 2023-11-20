@@ -30,7 +30,6 @@ map('i', '<C-k>', '<C-o>D')
 -- Multi-cursor
 map('n', 'cn', '*``cgn')
 map('n', 'cN', '*``cgN')
-
 local mc = [[y/\V<C-r>=escape(@", '/')<CR><CR>]]
 map('x', 'cn', mc .. '``cgn')
 map('x', 'cN', mc .. '``cgN')
@@ -74,13 +73,7 @@ if not vim.g.vscode then
   map('n', '<leader>dq', '<CMD>DiffviewClose<CR>')
   map('n', '<leader>dd', '<CMD>DiffviewOpen<CR>')
 
-  -- Trouble/Diagnostics
-  map('n', '<leader>et', '<CMD>Trouble<CR>')
-  map('n', '<leader>er', '<CMD>TroubleRefresh<CR>')
-  map('n', '<leader>eq', '<CMD>Trouble quickfix<CR>')
-  map('n', '<leader>el', '<CMD>Trouble loclist<CR>')
-  map('n', '<leader>ed', '<CMD>Trouble document_diagnostics<CR>')
-  map('n', '<leader>eD', '<CMD>Trouble workspace_diagnostics<CR>')
+  -- Diagnostics
   map('n', '<leader>e.', vim.diagnostic.open_float)
   map('n', '<leader>ee', vim.diagnostic.open_float)
   map('n', '[d', vim.diagnostic.goto_prev)
@@ -140,13 +133,12 @@ if not vim.g.vscode then
 
   -- Togle Options
   map('n', '<leader>on', '<CMD>set nu!<CR>') -- Toggle line numbers
-  map('n', '<leader>og', '<CMD>Gitsigns toggle_signs<CR>') -- Toggle toggle gitsigns
+  map('n', '<leader>og', '<CMD>Gitsigns toggle_signs<CR>') -- toggle gitsigns
   map('n', '<leader>ow', '<CMD>set wrap!<CR>') -- Toggle wrap
   map('n', '<leader>or', '<CMD>set relativenumber!<CR>') -- Toggle relative number
   map('n', '<leader>oi', '<CMD>IndentBlanklineToggle<CR>') -- Toggle indent-blankline
-  map('n', '<leader>os', '<CMD>set spell!<CR>') -- Toggle indent-blankline
+  map('n', '<leader>os', '<CMD>set spell!<CR>')
   map('n', '<leader>ol', '<CMD>set cursorline!<CR>')
-  map('n', '<leader>oc', '<CMD>ColorizerToggle<CR>')
   map('n', '<leader>of', require('lsp.formatter').toggle_autoformat)
   map('n', '<leader>od', toggle_diagnostics)
 

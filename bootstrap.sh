@@ -10,7 +10,11 @@ ln -sr ./.gitconfig /home/$USER/.gitconfig
 ln -sr ./.bash_aliases /home/$USER/.bash_aliases
 ln -sr ./.imwheelrc /home/$USER/.imwheelrc
 
-sudo dnf install 'dnf-command(config-manager)' -y
+echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases fi" >> ~/.bashrc
+echo -e "export NODE_OPTIONS=\"--max-old-space-size=4096\"" >> ~/.bashrc
+echo -e "export EDITOR=\"nvim\"" >> ~/.bashrc
+
+sudo dnf install "dnf-command(config-manager)" -y
 sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo -y
 sudo dnf copr enable pennbauman/ports -y
 sudo dnf install ripgrep gh fd-find neovim lf fzf make automake gcc gcc-c++ kernel-devel -y

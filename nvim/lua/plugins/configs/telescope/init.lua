@@ -46,11 +46,11 @@ local actions = require('telescope.actions')
 local layout_actions = require('telescope.actions.layout')
 local map = vim.keymap.set
 
--- Search
+-- Keymaps
 map('n', '<C-p>', find_or_git_files)
 map('n', '<leader>/', '<CMD>Telescope live_grep<CR>')
 map('n', '<leader>?', '<CMD>Telescope grep_string<CR>')
-map('x', '<leader>sr', '<CMD>Telescope resume<CR>') -- Search and replace
+map('n', '<leader><leader>', '<CMD>Telescope resume<CR>')
 map('n', '<leader>s?', grep_string_in_path)
 map('n', '<leader>sf', find_files_in_path)
 map('n', '<leader>s/', live_grep_in_path)

@@ -76,7 +76,6 @@ return {
     disabled_filetypes = {
       statusline = {
         'toggleterm',
-        'Trouble',
       },
     },
     theme = require('colorscheme.alabaster.lualine')(palette()),
