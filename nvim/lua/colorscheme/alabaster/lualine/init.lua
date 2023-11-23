@@ -1,14 +1,14 @@
 return function(p)
   local bg = p.bg2u
-  local fg_active = p.fg2d
+  local fg = p.fg
 
   local theme = {
-    a = { bg = p.bg4u, fg = p.fg },
-    b = { bg = bg, fg = fg_active },
-    c = { bg = bg, fg = fg_active },
-    x = { bg = bg, fg = p.fg },
-    y = { bg = bg, fg = fg_active },
-    z = { bg = p.bg4u, fg = p.fg },
+    a = { bg = p.bg4u, fg = fg },
+    b = { bg = bg, fg = fg },
+    c = { bg = bg, fg = fg },
+    x = { bg = bg, fg = fg },
+    y = { bg = bg, fg = fg },
+    z = { bg = p.bg4u, fg = fg },
   }
 
   return {

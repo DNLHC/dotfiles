@@ -35,6 +35,8 @@ xmap ; :
 
 nnoremap <leader>qq :q<CR>
 nnoremap <leader>qQ :q!<CR>
+nnoremap <leader>bq :bd<CR>
+nnoremap <leader>bQ :bd!<CR>
 cmap w!! w !sudo tee > /dev/null %
 
 let g:mc = "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>"

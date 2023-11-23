@@ -48,9 +48,7 @@ local cli_plugins = {
   'nvim-lua/plenary.nvim',
   {
     'L3MON4D3/LuaSnip',
-    -- follow latest release.
-    version = '2.*', -- Replace <CurrentMajor> by the latest released major (first number of latest release)
-    -- install jsregexp (optional!).
+    version = '2.*',
     build = 'make install_jsregexp',
   },
   {
@@ -113,20 +111,28 @@ local cli_plugins = {
   },
   {
     'echasnovski/mini.comment',
+    dependencies = {
+      'JoosepAlviste/nvim-ts-context-commentstring',
+    },
     version = false,
     keys = {
       { 'gc', mode = { 'x', 'n' } },
     },
     opts = function()
       return {
-        hooks = {
-          pre = function()
-            require('ts_context_commentstring.internal').update_commentstring()
+        options = {
+          custom_commentstring = function()
+            return require('ts_context_commentstring').calculate_commentstring()
+              or vim.bo.commentstring
           end,
         },
       }
     end,
     config = function(_, opts)
+      vim.g.skip_ts_context_commentstring_module = true
+      require('ts_context_commentstring').setup({
+        enable_autocmd = false,
+      })
       require('mini.comment').setup(opts)
     end,
   },
@@ -286,11 +292,9 @@ local cli_plugins = {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     dependencies = {
-      'p00f/nvim-ts-rainbow',
       'nvim-treesitter/nvim-treesitter-textobjects',
       'windwp/nvim-ts-autotag',
       'RRethy/nvim-treesitter-endwise',
-      'JoosepAlviste/nvim-ts-context-commentstring',
     },
     opts = function()
       return require('plugins.configs.treesitter')
