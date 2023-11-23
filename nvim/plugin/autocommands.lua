@@ -13,6 +13,35 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 if not vim.g.vscode then
+  -- Disable some features on large or minified files
+  vim.api.nvim_create_autocmd({ 'BufReadPre' }, {
+    pattern = '*',
+    group = augroup,
+    callback = function()
+      local buf = vim.api.nvim_get_current_buf()
+      local max_filesize = 100 * 1024 -- 100 KB
+      local max_minified_filesize = 10 * 1024 -- 10 KB
+      local lcount = vim.api.nvim_buf_line_count(buf)
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+
+      if
+        ok
+        and stats
+        and (
+          stats.size > max_filesize
+          or (lcount < 30 and stats.size > max_minified_filesize)
+        )
+      then
+        vim.b.large_buf = true
+        vim.cmd('syntax off')
+        vim.diagnostic.disable(buf)
+        vim.opt_local.foldmethod = 'manual'
+        vim.opt_local.spell = false
+        vim.opt_local.list = false
+        vim.b.minihipatterns_disable = true
+      end
+    end,
+  })
   -- Start terminal mode in insert mode and disable some options
   vim.api.nvim_create_autocmd('TermOpen', {
     group = augroup,

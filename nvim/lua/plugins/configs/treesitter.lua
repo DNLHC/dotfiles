@@ -23,23 +23,8 @@ return {
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
-    disable = function(_, buf)
-      local max_filesize = 150 * 1024 -- 150 KB
-      local max_minified_filesize = 10 * 1024 -- 10 KB
-      local lcount = vim.api.nvim_buf_line_count(buf)
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-
-      if not ok or not stats then
-        return true
-      end
-
-      if stats.size > max_filesize then
-        return true
-      end
-
-      if lcount == 1 and stats.size > max_minified_filesize then
-        return true
-      end
+    disable = function()
+      return vim.b.large_buf
     end,
   },
   indent = {

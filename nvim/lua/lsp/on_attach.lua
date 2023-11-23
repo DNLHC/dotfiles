@@ -2,16 +2,7 @@ local formatter = require('lsp.formatter')
 local actions = require('lsp.actions')
 
 return function(client, bufnr)
-  local lcount = vim.api.nvim_buf_line_count(bufnr)
-  local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
-
-  if not ok or not stats then
-    return
-  end
-
-  local is_minified_file = lcount == 1 and stats.size > 10 * 1024
-
-  if is_minified_file then
+  if vim.b.large_buf then
     return
   end
 

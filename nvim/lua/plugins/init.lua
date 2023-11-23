@@ -243,7 +243,7 @@ local cli_plugins = {
     'echasnovski/mini.hipatterns',
     event = 'BufReadPre',
     version = false,
-    config = function(_, opts)
+    config = function()
       local hipatterns = require('mini.hipatterns')
       hipatterns.setup({
         highlighters = {
