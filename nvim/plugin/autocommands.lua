@@ -19,19 +19,10 @@ if not vim.g.vscode then
     group = augroup,
     callback = function()
       local buf = vim.api.nvim_get_current_buf()
-      local max_filesize = 100 * 1024 -- 100 KB
-      local max_minified_filesize = 10 * 1024 -- 10 KB
-      local lcount = vim.api.nvim_buf_line_count(buf)
+      local max_filesize = 150 * 1024 -- 150 KB
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
 
-      if
-        ok
-        and stats
-        and (
-          stats.size > max_filesize
-          or (lcount < 30 and stats.size > max_minified_filesize)
-        )
-      then
+      if ok and stats and stats.size > max_filesize then
         vim.b.large_buf = true
         vim.cmd('syntax off')
         vim.diagnostic.disable(buf)

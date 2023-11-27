@@ -104,8 +104,32 @@ if not vim.g.vscode then
     end
   end
 
+  -- Clipboard
+  require('osc52').setup({ silent = true, tmux_passthrough = true })
+
+  local function copy(lines, _)
+    require('osc52').copy(table.concat(lines, '\n'))
+    print('copied lines: ', vim.inspect(lines))
+  end
+
+  local function paste()
+    return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') }
+  end
+
+  vim.g.clipboard = {
+    name = 'osc52',
+    copy = { ['+'] = copy, ['*'] = copy },
+    paste = { ['+'] = paste, ['*'] = paste },
+  }
+  local function copy_relative_path()
+    local path = vim.fn.fnamemodify(vim.fn.expand('%'), ':~:.')
+    copy({ path })
+    vim.cmd(('let @" = "%s"'):format(path))
+  end
+
   map('n', '<leader>bY', '<CMD>silent %y"<CR>') -- Yank current buffer content
-  map('n', '<leader>by', '<CMD>let @" = fnamemodify(expand("%"), ":~:.")<CR>') -- Yank relative path of the current buffer
+  -- map('n', '<leader>by', '<CMD>let @" = fnamemodify(expand("%"), ":~:.")<CR>') -- Yank relative path of the current buffer
+  map('n', '<leader>by', copy_relative_path) -- Yank relative path of the current buffer
   map('n', '<leader>bb', '<CMD>Telescope buffers<CR>')
   map('n', '<leader>bo', close_other_buffers())
   map('n', '<leader>bO', close_other_buffers(true))
@@ -133,10 +157,10 @@ if not vim.g.vscode then
 
   -- Togle Options
   map('n', '<leader>on', '<CMD>set nu!<CR>') -- Toggle line numbers
-  map('n', '<leader>og', '<CMD>Gitsigns toggle_signs<CR>') -- toggle gitsigns
+  map('n', '<leader>og', '<CMD>Gitsigns toggle_signs<CR>') -- Toggle gitsigns
   map('n', '<leader>ow', '<CMD>set wrap!<CR>') -- Toggle wrap
   map('n', '<leader>or', '<CMD>set relativenumber!<CR>') -- Toggle relative number
-  map('n', '<leader>oi', '<CMD>IndentBlanklineToggle<CR>') -- Toggle indent-blankline
+  map('n', '<leader>oi', '<CMD>set list!<CR>') -- Toggle indent lines
   map('n', '<leader>os', '<CMD>set spell!<CR>')
   map('n', '<leader>ol', '<CMD>set cursorline!<CR>')
   map('n', '<leader>of', require('lsp.formatter').toggle_autoformat)
@@ -146,36 +170,6 @@ if not vim.g.vscode then
   map('n', '<leader>tt', '<CMD>tabe term://bash<CR>')
   map('n', '<leader>tv', '<CMD>vs term://bash<CR>')
   map('n', '<leader>ts', '<CMD>sp term://bash<CR>')
-
-  -- clipboard
-  if vim.g.neovide then
-    local win32yank = vim.fn.expand('$HOME') .. '/.local/bin/win32yank.exe'
-    local copy = win32yank .. ' -i --crlf'
-    local paste = win32yank .. ' -o --lf'
-
-    vim.g.clipboard = {
-      name = 'win32yank',
-      copy = { ['+'] = copy, ['*'] = copy },
-      paste = { ['+'] = paste, ['*'] = paste },
-      cache_enabled = 0,
-    }
-  else
-    require('osc52').setup({ silent = true })
-
-    local function copy(lines, _)
-      require('osc52').copy(table.concat(lines, '\n'))
-    end
-
-    local function paste()
-      return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') }
-    end
-
-    vim.g.clipboard = {
-      name = 'osc52',
-      copy = { ['+'] = copy, ['*'] = copy },
-      paste = { ['+'] = paste, ['*'] = paste },
-    }
-  end
 
   local resizer = require('utils.resizer')
 
