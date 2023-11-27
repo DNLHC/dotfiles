@@ -109,7 +109,6 @@ if not vim.g.vscode then
 
   local function copy(lines, _)
     require('osc52').copy(table.concat(lines, '\n'))
-    print('copied lines: ', vim.inspect(lines))
   end
 
   local function paste()
