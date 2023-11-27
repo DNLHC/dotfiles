@@ -123,12 +123,24 @@ if not vim.g.vscode then
   local function copy_relative_path()
     local path = vim.fn.fnamemodify(vim.fn.expand('%'), ':~:.')
     copy({ path })
-    vim.cmd(('let @" = "%s"'):format(path))
+    vim.fn.setreg('"', path)
+    print(path)
   end
 
-  map('n', '<leader>bY', '<CMD>silent %y"<CR>') -- Yank current buffer content
-  -- map('n', '<leader>by', '<CMD>let @" = fnamemodify(expand("%"), ":~:.")<CR>') -- Yank relative path of the current buffer
-  map('n', '<leader>by', copy_relative_path) -- Yank relative path of the current buffer
+  local function copy_relative_path_with_line_number()
+    local value = ('%s:%s'):format(
+      vim.fn.fnamemodify(vim.fn.expand('%'), ':~:.'),
+      vim.fn.line('.')
+    )
+    copy({ value })
+    vim.fn.setreg('"', value)
+    print(value)
+  end
+  -- Copy
+  map('n', '<leader>xb', '<CMD>silent %y"<CR>') -- Yank relative path of the current buffer
+  map('n', '<leader>xp', copy_relative_path) -- Yank relative path of the current buffer
+  map('n', '<leader>xP', copy_relative_path_with_line_number) -- Yank relative path and current line number of the buffer
+
   map('n', '<leader>bb', '<CMD>Telescope buffers<CR>')
   map('n', '<leader>bo', close_other_buffers())
   map('n', '<leader>bO', close_other_buffers(true))
