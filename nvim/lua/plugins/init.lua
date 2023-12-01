@@ -196,10 +196,12 @@ local cli_plugins = {
   { 'echasnovski/mini.bufremove', lazy = true },
   {
     'nvim-telescope/telescope.nvim',
+    cmd = 'Telescope',
     dependencies = {
       {
         'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
+        enabled = vim.fn.executable('make') == 1,
       },
     },
     opts = function()
@@ -213,9 +215,37 @@ local cli_plugins = {
   },
   {
     'kevinhwang91/nvim-bqf',
-    opts = function()
-      return require('plugins.configs.nvim_bqf')
-    end,
+    ft = 'qf',
+    opts = {
+      func_map = {
+        split = '<C-s>',
+      },
+      filter = {
+        fzf = {
+          action_for = { ['ctrl-s'] = 'split' },
+        },
+      },
+      preview = {
+        auto_preview = true,
+        show_title = false,
+        win_height = 18,
+        winblend = 0,
+        border = { ' ', '─', ' ', ' ', ' ', ' ', ' ', ' ' },
+        should_preview_cb = function(bufnr, qwinid)
+          local ret = true
+          local bufname = vim.api.nvim_buf_get_name(bufnr)
+          local fsize = vim.fn.getfsize(bufname)
+          if fsize > 100 * 1024 then
+            -- skip file size greater than 100k
+            ret = false
+          elseif bufname:match('^fugitive://') then
+            -- skip fugitive buffer
+            ret = false
+          end
+          return ret
+        end,
+      },
+    },
     config = function(_, opts)
       require('bqf').setup(opts)
     end,

@@ -1,6 +1,11 @@
 return {
   ensure_installed = {
     'bash',
+    'make',
+    'http',
+    'gitignore',
+    'sql',
+    'php',
     'css',
     'diff',
     'html',

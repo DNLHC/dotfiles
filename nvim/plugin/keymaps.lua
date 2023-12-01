@@ -16,9 +16,7 @@ local function smart_delete()
 end
 
 map('n', 'dd', smart_delete, { expr = true })
-
 map({ 'n', 'x' }, '-', '$', { noremap = false })
-
 map('x', 'v', '$h')
 
 map({ 'n', 'x' }, 'gw', '*N')
@@ -120,6 +118,7 @@ if not vim.g.vscode then
     copy = { ['+'] = copy, ['*'] = copy },
     paste = { ['+'] = paste, ['*'] = paste },
   }
+
   local function copy_relative_path()
     local path = vim.fn.fnamemodify(vim.fn.expand('%'), ':~:.')
     copy({ path })
@@ -144,7 +143,7 @@ if not vim.g.vscode then
   map('n', '<leader>bb', '<CMD>Telescope buffers<CR>')
   map('n', '<leader>bo', close_other_buffers())
   map('n', '<leader>bO', close_other_buffers(true))
-  map('n', '<leader>bl', ':ls<CR>:b<space>')
+  map('n', '<leader>bl', '<CMD>ls<CR>:b<space>')
   map('n', '<leader>bf', '<CMD>Telescope current_buffer_fuzzy_find<CR>') -- Fuzzy search current buffer
   map('n', '<leader>b/', '<CMD>Telescope current_buffer_fuzzy_find<CR>') -- Fuzzy search current buffer
 
@@ -156,14 +155,14 @@ if not vim.g.vscode then
   map('n', '<leader>qQ', '<CMD>qa!<CR>')
   map('n', '<leader>qw', '<CMD>qwa<CR>')
 
-  local diagnostic_visible = true
+  local enable_diagnostic = true
   local function toggle_diagnostics()
-    if diagnostic_visible then
+    if enable_diagnostic then
       vim.diagnostic.disable()
     else
       vim.diagnostic.enable()
     end
-    diagnostic_visible = not diagnostic_visible
+    enable_diagnostic = not enable_diagnostic
   end
 
   -- Togle Options
