@@ -48,7 +48,8 @@ util.blend = function(fg, bg, alpha)
     blend_channel(3)
   )
 end
-function starts_with(str, start)
+
+local function starts_with(str, start)
   return string.sub(str, 1, string.len(start)) == start
 end
 

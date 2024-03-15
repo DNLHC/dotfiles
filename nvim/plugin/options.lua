@@ -51,6 +51,7 @@ if not vim.g.vscode then
   opt.cmdheight = 1
   opt.spelllang = 'en_us,ru'
   opt.spell = false
+  opt.numberwidth = 3
   opt.diffopt:append({
     'filler',
     'context:5',
@@ -70,7 +71,7 @@ if not vim.g.vscode then
   opt.path = { '.', '**' }
 
   if vim.fn.has('nvim-0.9.0') == 1 then
-    opt.statuscolumn = '%=%l %s'
+    opt.statuscolumn = '%=%l%s'
     opt.splitkeep = 'screen'
 
     vim.filetype.add({

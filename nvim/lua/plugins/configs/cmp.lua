@@ -3,8 +3,6 @@ if not present then
   return
 end
 
-local luasnip = require('luasnip')
-
 cmp.event:on('menu_opened', function()
   vim.b.copilot_suggestion_hidden = true
 end)
@@ -20,7 +18,7 @@ local WIDE_HEIGHT = 40
 cmp.setup({
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body)
+      require('luasnip').lsp_expand(args.body)
     end,
   },
   window = {

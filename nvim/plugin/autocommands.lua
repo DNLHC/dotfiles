@@ -39,6 +39,7 @@ if not vim.g.vscode then
     pattern = '*',
     command = 'startinsert | setlocal winfixheight nospell norelativenumber nonumber signcolumn=no scrolloff=0 statuscolumn=',
   })
+
   local function update_lead()
     local lcs = vim.opt_local.listchars:get()
     local tab = vim.fn.str2list(lcs.tab)

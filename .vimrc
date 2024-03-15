@@ -33,10 +33,10 @@ xmap - $
 nmap ; :
 xmap ; :
 
-nnoremap <leader>qq :q<CR>
-nnoremap <leader>qQ :q!<CR>
-nnoremap <leader>bq :bd<CR>
-nnoremap <leader>bQ :bd!<CR>
+nnoremap <leader>qq <CMD>q<CR>
+nnoremap <leader>qQ <CMD>q!<CR>
+nnoremap <leader>bq <CMD>bp<BAR>bd#<CR>
+nnoremap <leader>bQ <CMD>bp<BAR>bd!#<CR>
 cmap w!! w !sudo tee > /dev/null %
 
 let g:mc = "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>"

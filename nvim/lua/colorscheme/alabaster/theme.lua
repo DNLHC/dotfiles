@@ -29,7 +29,7 @@ function M.get(config, p)
     TermCursorNC = { fg = p.bg, bg = p.fg, ctermfg = '14', ctermbg = '15' },
     CursorLine = { bg = p.bg1u },
     CursorLineNr = { fg = p.fg },
-    LineNr = { fg = p.fg5d },
+    LineNr = { fg = p.fg1d },
     -- CursorLineSign = { bg = p.bg1u },
     CursorLineFold = { bg = p.bg1u },
     DarkenedPanel = { bg = groups.panel },
@@ -226,9 +226,15 @@ function M.get(config, p)
     MiniJump = { link = 'Search' },
 
     -- lewis6991/gitsigns.nvim
-    GitSignsAdd = { fg = p.diff.add },
-    GitSignsChange = { fg = p.diff.change },
-    GitSignsDelete = { fg = p.diff.remove },
+    GitSignsAdd = {
+      fg = p.diff.add,
+    },
+    GitSignsChange = {
+      fg = p.diff.change,
+    },
+    GitSignsDelete = {
+      fg = p.diff.remove,
+    },
     SignAdd = { link = 'GitSignsAdd' },
     SignChange = { link = 'GitSignsChange' },
     SignDelete = { link = 'GitSignsDelete' },

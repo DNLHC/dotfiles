@@ -37,6 +37,7 @@ M.light_palette = {
   purple = '#7a3e9d',
   red = '#aa3731',
   cyan = '#004d55',
+  orange = '#C48B00',
 
   fg1d = '#1b1b1b',
   fg2d = '#303030',
@@ -60,7 +61,6 @@ M.light_palette = {
   bg5u = '#cfcfcf',
   bg6u = '#c6c6c6',
 
-  orange = '#C48B00',
   punctuation = '#555555',
   diff = {
     add = '#80c895',

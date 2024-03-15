@@ -80,7 +80,7 @@ return {
   update_focused_file = { enable = true },
   update_cwd = false,
   filters = {
-    custom = { 'node_modules', 'vendor', '^\\.git$', '^\\.hg$' },
+    custom = { 'node_modules', '^\\.git$', '^\\.hg$' },
   },
   diagnostics = {
     enable = true,

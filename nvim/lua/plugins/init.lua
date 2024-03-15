@@ -40,7 +40,13 @@ local common_plugins = {
 }
 
 local cli_plugins = {
-  'tpope/vim-unimpaired',
+  {
+    'tpope/vim-unimpaired',
+    keys = {
+      { '[', mode = { 'x', 'n' } },
+      { ']', mode = { 'x', 'n' } },
+    },
+  },
   'lewis6991/impatient.nvim',
   'ojroques/nvim-osc52',
   'tpope/vim-sleuth',
@@ -79,6 +85,7 @@ local cli_plugins = {
   },
   {
     'kosayoda/nvim-lightbulb',
+    enabled = false,
     opts = {
       autocmd = { enabled = true },
       sign = {
@@ -228,10 +235,10 @@ local cli_plugins = {
       preview = {
         auto_preview = true,
         show_title = false,
-        win_height = 18,
+        win_height = 15,
         winblend = 0,
         border = { ' ', '─', ' ', ' ', ' ', ' ', ' ', ' ' },
-        should_preview_cb = function(bufnr, qwinid)
+        should_preview_cb = function(bufnr)
           local ret = true
           local bufname = vim.api.nvim_buf_get_name(bufnr)
           local fsize = vim.fn.getfsize(bufname)
@@ -311,6 +318,7 @@ local cli_plugins = {
           'tsplayground',
           'query',
           'checkhealth',
+          'lazy',
           'fugitive',
           'toggleterm',
         },
@@ -339,11 +347,11 @@ local cli_plugins = {
       'williamboman/mason-lspconfig.nvim',
     },
   },
-  'b0o/schemastore.nvim',
   {
     'neovim/nvim-lspconfig',
     dependencies = {
       'jose-elias-alvarez/typescript.nvim',
+      'b0o/schemastore.nvim',
     },
     config = function()
       require('lsp').config()
