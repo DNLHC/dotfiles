@@ -154,7 +154,6 @@ local cli_plugins = {
   },
   {
     'kyazdani42/nvim-tree.lua',
-    version = 'nightly',
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' },
     opts = function()
       return require('plugins.configs.nvim_tree')
