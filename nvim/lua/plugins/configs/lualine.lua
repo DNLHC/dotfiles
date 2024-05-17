@@ -1,53 +1,3 @@
-local formatter = require('lsp.formatter')
-
--- vim.api.nvim_create_autocmd('RecordingEnter', {
---   callback = function()
---     require('lualine').refresh({
---       place = { 'statusline' },
---     })
---   end,
--- })
-
--- vim.api.nvim_create_autocmd('RecordingLeave', {
---   callback = function()
---     local timer = vim.loop.new_timer()
---     timer:start(
---       50,
---       0,
---       vim.schedule_wrap(function()
---         require('lualine').refresh({
---           place = { 'statusline' },
---         })
---       end)
---     )
---   end,
--- })
-
--- local function show_macro_recording()
---   local recording_register = vim.fn.reg_recording()
---   if recording_register == '' then
---     return ''
---   else
---     return 'recording @' .. recording_register
---   end
--- end
---
--- local function search_results()
---   if vim.v.hlsearch == 0 then
---     return ''
---   end
---
---   local last_search = vim.fn.getreg('/')
---   local res = vim.fn.searchcount({ maxcount = 999, timeout = 500 })
---   local denominator = math.min(res.total, res.maxcount)
---
---   if res.total > 0 and last_search and last_search ~= '' then
---     return string.format('?%s [%d/%d]', last_search, res.current, denominator)
---   end
---
---   return ''
--- end
-
 local palette = require('colorscheme.alabaster.palette')
 
 local function diff_source()
@@ -98,7 +48,10 @@ return {
     lualine_x = {},
     lualine_y = {
       function()
-        return (formatter.enable_autoformat and 'F+') or 'F-'
+        if vim.b.disable_autoformat or vim.g.disable_autoformat then
+          return 'F-'
+        end
+        return 'F+'
       end,
       'encoding',
       'filetype',

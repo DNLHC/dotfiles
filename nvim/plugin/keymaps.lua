@@ -34,7 +34,6 @@ map('x', 'cN', mc .. '``cgN')
 
 map('x', 'p', '"_dP')
 map('n', 's', '"_s')
-map('n', 'x', '"_x')
 
 map({ 'n', 'x' }, ';', ':', { noremap = false })
 
@@ -59,10 +58,7 @@ if not vim.g.vscode then
   map('n', '<leader>gg', '<CMD>Git<CR>')
 
   -- Diagnostics
-  map('n', '<leader>e.', vim.diagnostic.open_float)
   map('n', '<leader>ee', vim.diagnostic.open_float)
-  map('n', '[d', vim.diagnostic.goto_prev)
-  map('n', ']d', vim.diagnostic.goto_next)
 
   local bufremove = require('mini.bufremove')
 
@@ -134,9 +130,6 @@ if not vim.g.vscode then
   map('n', '<leader>bf', '<CMD>Telescope current_buffer_fuzzy_find<CR>') -- Fuzzy search current buffer
   map('n', '<leader>b/', '<CMD>Telescope current_buffer_fuzzy_find<CR>') -- Fuzzy search current buffer
 
-  -- Files
-  map('n', '<leader>fd', '<CMD>call delete(expand("%")) | bd!<CR>')
-
   -- Quit
   map('n', '<leader>qq', '<CMD>qa<CR>')
   map('n', '<leader>qQ', '<CMD>qa!<CR>')
@@ -160,7 +153,12 @@ if not vim.g.vscode then
   map('n', '<leader>oi', '<CMD>set list!<CR>') -- Toggle indent lines
   map('n', '<leader>os', '<CMD>set spell!<CR>')
   map('n', '<leader>ol', '<CMD>set cursorline!<CR>')
-  map('n', '<leader>of', require('lsp.formatter').toggle_autoformat)
+  map('n', '<leader>of', function()
+    vim.g.disable_autoformat = not vim.g.disable_autoformat
+  end)
+  map('n', '<leader>oF', function()
+    vim.b.disable_autoformat = not vim.b.disable_autoformat
+  end)
   map('n', '<leader>od', toggle_diagnostics)
 
   -- Terminal

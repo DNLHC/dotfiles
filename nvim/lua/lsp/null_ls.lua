@@ -7,21 +7,11 @@ function M.setup(on_attach)
   end
 
   local builtins = null_ls.builtins
-  local formatting = builtins.formatting
   local diagnostics = builtins.diagnostics
   local code_actions = builtins.code_actions
 
   null_ls.setup({
     sources = {
-      formatting.stylua,
-      formatting.prettierd.with({
-        extra_filetypes = { 'pug', 'webc', 'astro' },
-        env = {
-          PRETTIERD_DEFAULT_CONFIG = vim.fn.expand(
-            '~/.config/nvim/utils/.prettierrc'
-          ),
-        },
-      }),
       code_actions.eslint_d,
       diagnostics.stylelint.with({
         extra_filetypes = { 'pcss', 'astro' },

@@ -330,6 +330,12 @@ local cli_plugins = {
     end,
   },
   {
+    'stevearc/conform.nvim',
+    config = function ()
+      require('plugins.configs.conform').setup()
+    end
+  },
+  {
     'jose-elias-alvarez/null-ls.nvim',
     dependencies = { 'davidmh/cspell.nvim' },
   },

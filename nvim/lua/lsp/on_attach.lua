@@ -6,18 +6,11 @@ return function(client, bufnr)
     return
   end
 
-  formatter.setup(client, bufnr)
-
-  local function format()
-    formatter.format(client, bufnr)
-  end
-
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { buffer = bufnr }
   vim.keymap.set('n', '<C-x>', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', 'gh', vim.lsp.buf.hover, bufopts)
   -- Open definition in a split window
   vim.keymap.set('n', '<C-w>gd', function()
@@ -62,10 +55,6 @@ return function(client, bufnr)
     bufopts
   )
   vim.keymap.set('n', 'ge', vim.lsp.buf.rename, bufopts)
-
-  if client.supports_method('textDocument/formatting') then
-    vim.keymap.set('n', '<leader>=b', format, bufopts) -- Format buffer
-  end
 
   -- Highlight symbol
   if client.supports_method('textDocument/documentHighlight') then
