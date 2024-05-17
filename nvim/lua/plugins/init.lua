@@ -331,13 +331,15 @@ local cli_plugins = {
   },
   {
     'stevearc/conform.nvim',
-    config = function ()
+    config = function()
       require('plugins.configs.conform').setup()
-    end
+    end,
   },
   {
-    'jose-elias-alvarez/null-ls.nvim',
-    dependencies = { 'davidmh/cspell.nvim' },
+    'nvimtools/none-ls.nvim',
+    dependencies = {
+      'nvimtools/none-ls-extras.nvim',
+    },
   },
   {
     'hrsh7th/nvim-cmp',

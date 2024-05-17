@@ -8,15 +8,16 @@ function M.setup(on_attach)
 
   local builtins = null_ls.builtins
   local diagnostics = builtins.diagnostics
-  local code_actions = builtins.code_actions
+  local eslint_d_diagnostics = require('none-ls.diagnostics.eslint_d')
+  local eslint_d_code_actions = require('none-ls.code_actions.eslint_d')
 
   null_ls.setup({
     sources = {
-      code_actions.eslint_d,
+      eslint_d_code_actions,
       diagnostics.stylelint.with({
         extra_filetypes = { 'pcss', 'astro' },
       }),
-      diagnostics.eslint_d.with({
+      eslint_d_diagnostics.with({
         extra_args = { '--no-error-on-unmatched-pattern' }, -- don't remember why but it's there
       }),
     },

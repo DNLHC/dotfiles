@@ -1,4 +1,3 @@
-local formatter = require('lsp.formatter')
 local actions = require('lsp.actions')
 
 return function(client, bufnr)
