@@ -322,7 +322,7 @@ local cli_plugins = {
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      'jose-elias-alvarez/typescript.nvim',
+      'pmizio/typescript-tools.nvim',
       'b0o/schemastore.nvim',
     },
     config = function()

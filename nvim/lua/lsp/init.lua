@@ -63,9 +63,7 @@ function M.config()
     end,
   })
 
-  require('typescript').setup({
-    server = options,
-  })
+  require('typescript-tools').setup(options)
 
   local signs = require('core.globals').diagnostic_signs
 

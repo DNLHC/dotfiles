@@ -6,9 +6,6 @@ function M.setup(on_attach)
     return
   end
 
-  local typescript_code_actions =
-    require('typescript.extensions.null-ls.code-actions')
-
   local builtins = null_ls.builtins
   local formatting = builtins.formatting
   local diagnostics = builtins.diagnostics
@@ -26,7 +23,6 @@ function M.setup(on_attach)
         },
       }),
       code_actions.eslint_d,
-      typescript_code_actions,
       diagnostics.stylelint.with({
         extra_filetypes = { 'pcss', 'astro' },
       }),
