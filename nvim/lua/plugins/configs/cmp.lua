@@ -3,6 +3,8 @@ if not present then
   return
 end
 
+local luasnip = require('luasnip')
+
 cmp.event:on('menu_opened', function()
   vim.b.copilot_suggestion_hidden = true
 end)
@@ -18,7 +20,7 @@ local WIDE_HEIGHT = 40
 cmp.setup({
   snippet = {
     expand = function(args)
-      require('luasnip').lsp_expand(args.body)
+      luasnip.lsp_expand(args.body)
     end,
   },
   window = {
@@ -50,6 +52,8 @@ cmp.setup({
           select = true,
           behavior = cmp.ConfirmBehavior.Insert,
         })
+      elseif luasnip.locally_jumpable(1) then
+        luasnip.jump(1)
       elseif copilot_suggestions.is_visible() then
         copilot_suggestions.accept()
       else
@@ -57,7 +61,11 @@ cmp.setup({
       end
     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function()
-      cmp.complete()
+      if luasnip.locally_jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        cmp.complete()
+      end
     end, { 'i', 's' }),
   }),
   sources = cmp.config.sources({

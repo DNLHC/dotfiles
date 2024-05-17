@@ -124,7 +124,7 @@ local treesitter_migrate = function(p)
     TSPunctSpecial = { fg = p.fg, default = true },
 
     TSConstant = { link = 'Constant', default = true },
-    TSConstBuiltin = { link = 'Special', default = true },
+    TSConstBuiltin = { fg = p.purple, default = true },
     TSConstMacro = { link = 'Define', default = true },
     TSString = { link = 'String', default = true },
     TSStringRegex = { link = 'String', default = true },

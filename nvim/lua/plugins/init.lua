@@ -54,7 +54,6 @@ local cli_plugins = {
   'nvim-lua/plenary.nvim',
   {
     'L3MON4D3/LuaSnip',
-    version = '2.*',
     build = 'make install_jsregexp',
   },
   {
@@ -68,24 +67,8 @@ local cli_plugins = {
     end,
   },
   {
-    'ThePrimeagen/harpoon',
-    config = function()
-      local harpoon_mark = require('harpoon.mark')
-      local harpoon_ui = require('harpoon.ui')
-      vim.keymap.set('n', '<leader>ha', harpoon_mark.add_file)
-      vim.keymap.set('n', '<leader>hh', harpoon_ui.toggle_quick_menu)
-      vim.keymap.set('n', '<C-h>', harpoon_ui.nav_prev)
-      vim.keymap.set('n', '<C-l>', harpoon_ui.nav_next)
-      for i = 1, 9, 1 do
-        vim.keymap.set('n', '<leader>h' .. i, function()
-          harpoon_ui.nav_next(i)
-        end)
-      end
-    end,
-  },
-  {
     'kosayoda/nvim-lightbulb',
-    enabled = false,
+    enabled = true,
     opts = {
       autocmd = { enabled = true },
       sign = {
@@ -267,16 +250,6 @@ local cli_plugins = {
     end,
   },
   {
-    'sindrets/diffview.nvim',
-    cmd = { 'DiffviewFileHistory', 'DiffviewOpen', 'DiffviewLog' },
-    opts = function()
-      return require('plugins.configs.diffview')
-    end,
-    config = function(_, opts)
-      require('diffview').setup(opts)
-    end,
-  },
-  {
     'echasnovski/mini.hipatterns',
     event = 'BufReadPre',
     version = false,
@@ -312,7 +285,6 @@ local cli_plugins = {
         pattern = {
           'help',
           'NvimTree',
-          'DiffviewFiles',
           'qf',
           'lspinfo',
           'tsplayground',

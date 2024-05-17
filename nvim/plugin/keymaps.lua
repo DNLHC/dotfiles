@@ -3,8 +3,8 @@ local map = vim.keymap.set
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
-map({ 'n', 'x' }, '<C-j>', '4j', { noremap = false })
-map({ 'n', 'x' }, '<C-k>', '4k', { noremap = false })
+map({ 'n', 'x' }, '<C-j>', '4j', { noremap = false, silent = true })
+map({ 'n', 'x' }, '<C-k>', '4k', { noremap = false, silent = true })
 map({ 'n', 'x' }, '<C-e>', '2<C-e>')
 map({ 'n', 'x' }, '<C-y>', '2<C-y>')
 
@@ -56,20 +56,7 @@ if not vim.g.vscode then
 
   -- Git
   map('n', '<leader>gb', '<CMD>Gitsigns blame_line<CR>')
-  map('n', '<leader>gd', '<CMD>DiffviewOpen<CR>')
   map('n', '<leader>gg', '<CMD>Git<CR>')
-  map('n', '<leader>gh', '<CMD>DiffviewFileHistory<CR>')
-
-  -- Diff
-  vim.api.nvim_create_user_command(
-    'DiffviewFile',
-    'execute("DiffviewOpen -- " . expand("%")) | DiffviewToggleFiles',
-    {}
-  ) -- Diff current buffer
-  map('n', '<leader>df', '<CMD>DiffviewFile<CR>')
-  map('n', '<leader>dh', '<CMD>DiffviewFileHistory<CR>')
-  map('n', '<leader>dq', '<CMD>DiffviewClose<CR>')
-  map('n', '<leader>dd', '<CMD>DiffviewOpen<CR>')
 
   -- Diagnostics
   map('n', '<leader>e.', vim.diagnostic.open_float)

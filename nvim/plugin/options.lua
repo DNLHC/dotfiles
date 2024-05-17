@@ -5,12 +5,6 @@ vim.g.editorconfig = false
 
 if not vim.g.vscode then
   vim.g.cursorhold_updatetime = 250
-  opt.list = true
-  opt.listchars = {
-    tab = '│ ',
-    leadmultispace = '│ ',
-    multispace = '│ ',
-  }
   opt.shiftwidth = 2
   opt.tabstop = 2
   opt.smartindent = true

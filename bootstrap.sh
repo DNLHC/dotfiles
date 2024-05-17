@@ -10,7 +10,7 @@ ln -sr ./.gitconfig /home/$USER/.gitconfig
 ln -sr ./.bash_aliases /home/$USER/.bash_aliases
 ln -sr ./.imwheelrc /home/$USER/.imwheelrc
 
-echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases fi" >> ~/.bashrc
+echo -e "\nif [ -f ~/.bash_aliases ]; then \n\t. ~/.bash_aliases \nfi" >> ~/.bashrc
 echo -e "export NODE_OPTIONS=\"--max-old-space-size=4096\"" >> ~/.bashrc
 echo -e "export EDITOR=\"nvim\"" >> ~/.bashrc
 
