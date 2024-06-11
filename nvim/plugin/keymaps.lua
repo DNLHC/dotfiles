@@ -38,13 +38,11 @@ map('n', 's', '"_s')
 map({ 'n', 'x' }, ';', ':', { noremap = false })
 
 if not vim.g.vscode then
-  map('n', '<C-n>', '<CMD>NvimTreeToggle<CR>')
   map('c', 'w!!', 'w !sudo tee > /dev/null %')
 
   -- Exit from Terminal mode
   map('t', '<Esc>', '<C-\\><C-n>')
   map('t', 'jj', '<C-\\><C-n><C-w><C-p>')
-  map('n', '<C-\\>', '<CMD>ToggleTerm<CR>')
 
   -- map('n', '<C-h>', '<CMD>bp<CR>')
   -- map('n', '<C-l>', '<CMD>bn<CR>')
@@ -61,10 +59,6 @@ if not vim.g.vscode then
   map('n', '<leader>ee', vim.diagnostic.open_float)
 
   local bufremove = require('mini.bufremove')
-
-  map('n', '<leader>uu', '<CMD>UndotreeToggle<CR>')
-  map('n', '<leader>uq', '<CMD>UndotreeHide<CR>')
-  map('n', '<leader>uf', '<CMD>UndotreeFocus<CR>')
 
   -- Buffers
   map('n', '<leader>bq', function()
@@ -123,7 +117,7 @@ if not vim.g.vscode then
   map('n', '<leader>xp', copy_relative_path) -- Yank relative path of the current buffer
   map('n', '<leader>xP', copy_relative_path_with_line_number) -- Yank relative path and current line number of the buffer
 
-  map('n', '<leader>bb', '<CMD>Telescope buffers<CR>')
+  -- map('n', '<leader>bb', '<CMD>Telescope buffers<CR>')
   map('n', '<leader>bo', close_other_buffers())
   map('n', '<leader>bO', close_other_buffers(true))
   map('n', '<leader>bl', '<CMD>ls<CR>:b<space>')
@@ -145,7 +139,9 @@ if not vim.g.vscode then
     enable_diagnostic = not enable_diagnostic
   end
 
-  -- Togle Options
+  map('n', '<leader>dq', require('utils.fugitive').close_other_windows)
+
+  -- Toggle Options
   map('n', '<leader>on', '<CMD>set nu!<CR>') -- Toggle line numbers
   map('n', '<leader>og', '<CMD>Gitsigns toggle_signs<CR>') -- Toggle gitsigns
   map('n', '<leader>ow', '<CMD>set wrap!<CR>') -- Toggle wrap
@@ -160,6 +156,11 @@ if not vim.g.vscode then
     vim.b.disable_autoformat = not vim.b.disable_autoformat
   end)
   map('n', '<leader>od', toggle_diagnostics)
+  map('n', '<leader>oh', function()
+    if vim.fn.has('nvim-0.10') == 1 then
+      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+    end
+  end, { desc = 'LSP | Toggle Inlay Hints', silent = true })
 
   -- Terminal
   map('n', '<leader>tt', '<CMD>tabe term://bash<CR>')

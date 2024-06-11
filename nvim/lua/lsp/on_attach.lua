@@ -18,7 +18,7 @@ return function(client, bufnr)
       0,
       'textDocument/definition',
       params,
-      actions.goto_definition('vsplit')
+      actions.goto_definition()
     )
   end, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
@@ -30,6 +30,8 @@ return function(client, bufnr)
   vim.keymap.set('n', 'gY', '<CMD>Glance type_definitions<CR>', bufopts)
   vim.keymap.set('n', 'gM', '<CMD>Glance implementations<CR>', bufopts)
   vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+  vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
   vim.keymap.set(
     'n',
     '<leader>wr',
@@ -56,23 +58,23 @@ return function(client, bufnr)
   vim.keymap.set('n', 'ge', vim.lsp.buf.rename, bufopts)
 
   -- Highlight symbol
-  if client.supports_method('textDocument/documentHighlight') then
-    vim.api.nvim_create_augroup('lsp_document_highlight', {
-      clear = false,
-    })
-    vim.api.nvim_clear_autocmds({
-      buffer = bufnr,
-      group = 'lsp_document_highlight',
-    })
-    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-      callback = vim.lsp.buf.document_highlight,
-      buffer = bufnr,
-      group = 'lsp_document_highlight',
-    })
-    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-      callback = vim.lsp.buf.clear_references,
-      buffer = bufnr,
-      group = 'lsp_document_highlight',
-    })
-  end
+  -- if client.supports_method('textDocument/documentHighlight') then
+  --   vim.api.nvim_create_augroup('lsp_document_highlight', {
+  --     clear = false,
+  --   })
+  --   vim.api.nvim_clear_autocmds({
+  --     buffer = bufnr,
+  --     group = 'lsp_document_highlight',
+  --   })
+  --   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+  --     callback = vim.lsp.buf.document_highlight,
+  --     buffer = bufnr,
+  --     group = 'lsp_document_highlight',
+  --   })
+  --   vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+  --     callback = vim.lsp.buf.clear_references,
+  --     buffer = bufnr,
+  --     group = 'lsp_document_highlight',
+  --   })
+  -- end
 end

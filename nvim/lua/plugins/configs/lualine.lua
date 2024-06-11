@@ -14,13 +14,14 @@ end
 local function location()
   local line = vim.fn.line('.')
   local col = vim.fn.virtcol('.')
-  return string.format('Ln %d, Col %d', line, col)
+  return string.format('(%d, %d)', line, col)
 end
 
 return {
   extensions = { 'quickfix', 'nvim-tree', 'toggleterm', 'man' },
   options = {
-    global_status = true,
+    global_status = false,
+    icons_enabled = false,
     component_separators = '',
     section_separators = '',
     disabled_filetypes = {
@@ -33,7 +34,7 @@ return {
   },
   sections = {
     lualine_a = {
-      { 'branch', icon = '' },
+      { 'branch', icon = nil },
       { 'diff', source = diff_source, colored = false },
     },
     lualine_b = {
@@ -53,17 +54,27 @@ return {
         end
         return 'F+'
       end,
-      'encoding',
       'filetype',
     },
     lualine_z = { location },
   },
   inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {},
+    lualine_a = {
+      { 'diff', source = diff_source, colored = false },
+    },
+    lualine_b = {
+      {
+        'diagnostics',
+        colored = true,
+        symbols = { error = 'E:', warn = 'W:', info = 'I:', hint = 'H:' },
+        update_on_insert = false,
+      },
+    },
+    lualine_c = { { 'filename', path = 1, shorting_target = 10 } },
     lualine_x = {},
-    lualine_y = {},
-    lualine_z = { 'filetype' },
+    lualine_y = {
+      'filetype',
+    },
+    lualine_z = { location },
   },
 }

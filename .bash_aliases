@@ -3,6 +3,7 @@
 alias P='cd ~/projects'
 alias D='cd ~/Downloads'
 alias ls='ls --color'
+alias ..='cd ..'
 
 alias update='sudo dnf update && sudo dnf upgrade'
 alias deb='sudo dpkg -i'

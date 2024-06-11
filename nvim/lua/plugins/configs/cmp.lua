@@ -3,24 +3,22 @@ if not present then
   return
 end
 
-local luasnip = require('luasnip')
-
-cmp.event:on('menu_opened', function()
-  vim.b.copilot_suggestion_hidden = true
-end)
-
-cmp.event:on('menu_closed', function()
-  vim.b.copilot_suggestion_hidden = false
-end)
-
-local copilot_suggestions = require('copilot.suggestion')
+-- cmp.event:on('menu_opened', function()
+--   vim.b.copilot_suggestion_hidden = true
+-- end)
+--
+-- cmp.event:on('menu_closed', function()
+--   vim.b.copilot_suggestion_hidden = false
+-- end)
+--
+-- local copilot_suggestions = require('copilot.suggestion')
 
 local WIDE_HEIGHT = 40
 
 cmp.setup({
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body)
+      vim.snippet.expand(args.body)
     end,
   },
   window = {
@@ -52,25 +50,19 @@ cmp.setup({
           select = true,
           behavior = cmp.ConfirmBehavior.Insert,
         })
-      elseif luasnip.locally_jumpable(1) then
-        luasnip.jump(1)
-      elseif copilot_suggestions.is_visible() then
-        copilot_suggestions.accept()
+      -- elseif copilot_suggestions.is_visible() then
+      --   copilot_suggestions.accept()
       else
         fallback()
       end
     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function()
-      if luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        cmp.complete()
-      end
+      cmp.complete()
     end, { 'i', 's' }),
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp', keyword_length = 2 },
-    { name = 'copilot' },
+    -- { name = 'copilot' },
     { name = 'nvim_lsp_signature_help' },
     { name = 'nvim_lua', keyword_length = 3 },
     { name = 'path' },
@@ -80,6 +72,14 @@ cmp.setup({
   experimental = {
     ghost_text = { hl_group = 'GhostText' },
   },
+})
+
+cmp.setup.filetype('vim', {
+  sources = cmp.config.sources({
+    { name = 'path' },
+  }, {
+    { name = 'cmdline' },
+  }),
 })
 
 cmp.setup.cmdline(':', {

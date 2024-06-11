@@ -31,13 +31,13 @@ M.dark_palette = {
 }
 
 M.light_palette = {
-  green = '#448c27',
+  green = '#428726',
   fg = '#000000',
   blue = '#0550ae',
   purple = '#7a3e9d',
   red = '#aa3731',
-  cyan = '#004d55',
-  orange = '#C48B00',
+  cyan = '#205c62',
+  orange = '#AD7C00',
 
   fg1d = '#1b1b1b',
   fg2d = '#303030',
@@ -46,10 +46,10 @@ M.light_palette = {
   fg5d = '#767676',
   fg6d = '#9d9d9d',
 
-  selection = '#c2ddfc',
+  selection = '#CAE1FC',
   search = '#f0ebb4',
   cur_search = '#f0d1b4',
-  yank = '#f0dca8',
+  yank = '#F2E0B5',
 
   bg2d = '#ffffff',
   bg1d = '#ffffff',
@@ -65,7 +65,7 @@ M.light_palette = {
   diff = {
     add = '#80c895',
     remove = '#f99b9b',
-    change = '#d5c489',
+    change = '#dfc97f',
   },
   none = 'NONE',
 }

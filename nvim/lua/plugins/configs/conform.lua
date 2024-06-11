@@ -2,7 +2,6 @@ local M = {}
 
 M.setup = function()
   local conform = require('conform')
-
   local prettier_formatter = { { 'prettierd', 'prettier' } }
 
   conform.setup({
@@ -46,9 +45,7 @@ M.setup = function()
     formatters = {
       prettierd = {
         env = {
-          PRETTIERD_DEFAULT_CONFIG = vim.fn.expand(
-            '~/.config/nvim/utils/.prettierrc'
-          ),
+          PRETTIERD_DEFAULT_CONFIG = vim.fn.expand('~/.prettierrc'),
         },
       },
     },

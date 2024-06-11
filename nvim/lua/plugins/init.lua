@@ -10,9 +10,7 @@ local common_plugins = {
       'ds',
       { 'S', mode = 'x' },
     },
-    config = function()
-      require('nvim-surround').setup({})
-    end,
+    opts = {},
   },
   {
     'echasnovski/mini.jump',
@@ -33,9 +31,6 @@ local common_plugins = {
         idle_stop = 10000000,
       },
     },
-    config = function(_, opts)
-      require('mini.jump').setup(opts)
-    end,
   },
 }
 
@@ -47,15 +42,182 @@ local cli_plugins = {
       { ']', mode = { 'x', 'n' } },
     },
   },
+  {
+    'lambdalisue/vim-suda',
+    cmd = { 'SudaRead', 'SudaWrite' },
+  },
+  {
+    'danielfalk/smart-open.nvim',
+    branch = '0.2.x',
+    dependencies = {
+      'kkharji/sqlite.lua',
+    },
+  },
   'lewis6991/impatient.nvim',
   'ojroques/nvim-osc52',
   'tpope/vim-sleuth',
-  { cmd = 'Git', 'tpope/vim-fugitive' },
-  'nvim-lua/plenary.nvim',
+  { 'tpope/vim-fugitive' },
   {
-    'L3MON4D3/LuaSnip',
-    build = 'make install_jsregexp',
+    'ibhagwan/fzf-lua',
+    config = function()
+      local actions = require('fzf-lua').actions
+
+      local function find_files_in_path(path)
+        local _path = path or vim.fn.input('cwd: ', '', 'dir')
+        require('fzf-lua').files({ cwd = _path })
+      end
+
+      local function live_grep_glob_in_path(path)
+        local _path = path or vim.fn.input('cwd: ', '', 'dir')
+        require('fzf-lua').files({ cwd = _path })
+      end
+
+      vim.keymap.set('n', '<leader>/', '<CMD>FzfLua live_grep_glob<CR>')
+      vim.keymap.set('n', '<leader>bb', '<CMD>FzfLua buffers<CR>')
+      vim.keymap.set('n', '<leader><leader>', '<CMD>FzfLua resume<CR>')
+      vim.keymap.set('n', '<C-f>', '<CMD>FzfLua files<CR>')
+      vim.keymap.set('n', '<leader>sf', find_files_in_path)
+      vim.keymap.set('n', '<leader>?', live_grep_glob_in_path)
+      vim.keymap.set('n', '<C-g>', '<CMD>FzfLua grep_cword<CR>')
+      vim.keymap.set('v', '<C-g>', '<CMD>FzfLua grep_visual<CR>')
+
+      require('fzf-lua').setup({
+        defaults = {
+          file_icons = false,
+          -- git_icons = true,
+          prompt = 'pattern: ',
+          cwd_prompt = false,
+          no_header = true,
+          input_prompt = 'pattern: ',
+        },
+        fzf_opts = {
+          ['--pointer'] = '▌',
+          ['--highlight-line'] = true,
+          ['--tabstop'] = 2,
+          ['--marker'] = '+',
+          ['--marker-multi-line'] = '┃┃┃',
+          ['--no-scrollbar'] = true,
+        },
+        hls = {
+          normal = 'TelescopeNormal',
+          border = 'TelescopeBorder',
+          help_normal = 'TelescopeNormal',
+          help_border = 'TelescopeBorder',
+          preview_normal = 'TelescopeNormal',
+          preview_border = 'TelescopeBorder',
+          -- builtin preview only
+          cursor = 'Cursor',
+          cursorline = 'CursorLine',
+          cursorlinenr = 'CursorLineNr',
+          search = 'IncSearch',
+        },
+        fzf_colors = {
+          ['fg'] = { 'fg', 'TelescopeNormal' },
+          ['bg'] = { 'bg', 'TelescopeNormal' },
+          ['hl'] = { 'fg', 'Function' },
+          ['fg+'] = { 'fg', 'Normal' },
+          ['bg+'] = { 'bg', 'TelescopeSelection' },
+          ['hl+'] = { 'fg', 'Function' },
+          ['info'] = { 'fg', 'TelescopeNormal' },
+          -- conflicts with rg bg colors `path` and `line`
+          -- ['selected-bg'] = { 'bg', 'TelescopeMultiSelection' },
+          ['border'] = { 'fg', 'TelescopeBorder' },
+          ['gutter'] = { 'bg', 'TelescopeNormal' },
+          ['query'] = { 'fg', 'TelescopePromptNormal' },
+          ['separator'] = { 'bg', 'Normal' },
+          ['prompt'] = { 'fg', 'TelescopePromptPrefix' },
+          ['pointer'] = { 'fg', 'TelescopeSelectionCaret' },
+          ['marker'] = { 'fg', 'TelescopeSelectionCaret' },
+          ['header'] = { 'fg', 'TelescopeTitle' },
+        },
+        winopts = {
+          split = 'bot new | resize 20',
+          border = { '│', '', '', '', '', '', '│', '│' },
+          preview = {
+            title = false,
+            scrollbar = false,
+            horizontal = 'right:55%',
+            wrap = 'wrap',
+            border = 'noborder',
+            winopts = {
+              number = false,
+            },
+          },
+        },
+        keymap = {
+          builtin = {
+            ['<F1>'] = 'toggle-help',
+            ['<F2>'] = 'toggle-fullscreen',
+            -- Only valid with the 'builtin' previewer
+            ['<F3>'] = 'toggle-preview-wrap',
+            ['<F4>'] = 'toggle-preview',
+            ['<F5>'] = 'toggle-preview-ccw',
+            ['<F6>'] = 'toggle-preview-cw',
+            ['<C-d>'] = 'preview-page-down',
+            ['<C-u>'] = 'preview-page-up',
+            ['<S-left>'] = 'preview-page-reset',
+          },
+          fzf = {
+            ['ctrl-z'] = 'abort',
+            ['ctrl-f'] = 'half-page-down',
+            ['ctrl-b'] = 'half-page-up',
+            ['ctrl-a'] = 'beginning-of-line',
+            ['ctrl-e'] = 'end-of-line',
+            ['alt-a'] = 'toggle-all',
+            -- Only valid with fzf previewers (bat/cat/git/etc)
+            ['f3'] = 'toggle-preview-wrap',
+            ['f4'] = 'toggle-preview',
+            ['ctrl-d'] = 'preview-page-down',
+            ['ctrl-u'] = 'preview-page-up',
+            ['ctrl-q'] = 'select-all+accept',
+          },
+        },
+        actions = {
+          files = {
+            ['default'] = actions.file_edit_or_qf,
+            ['ctrl-x'] = actions.file_split,
+            ['ctrl-v'] = actions.file_vsplit,
+            ['ctrl-t'] = actions.file_tabedit,
+            ['alt-q'] = actions.file_sel_to_qf,
+            ['alt-l'] = actions.file_sel_to_ll,
+          },
+          buffers = {
+            ['default'] = actions.buf_edit,
+            ['ctrl-v'] = actions.buf_vsplit,
+            ['ctrl-t'] = actions.buf_tabedit,
+          },
+        },
+        grep = {
+          -- formatter = 'path.filename_first',
+          multiline = 1,
+          git_icons = false,
+        },
+      })
+    end,
   },
+  {
+    'stevearc/oil.nvim',
+    config = function()
+      require('oil').setup({
+        columns = {},
+        view_options = {
+          show_hidden = true,
+        },
+        win_options = {
+          statuscolumn = ' ',
+        },
+        -- constrain_cursor = 'name',
+        keymaps = {
+          ['~'] = 'actions.open_cwd',
+          ['<C-q>'] = 'actions.add_to_qflist',
+          ['-'] = false,
+        },
+      })
+
+      vim.keymap.set('n', '<C-n>', '<CMD>Oil<CR>')
+    end,
+  },
+  'nvim-lua/plenary.nvim',
   {
     'mbbill/undotree',
     cmd = { 'UndotreeToggle' },
@@ -68,7 +230,7 @@ local cli_plugins = {
   },
   {
     'kosayoda/nvim-lightbulb',
-    enabled = true,
+    enabled = false,
     opts = {
       autocmd = { enabled = true },
       sign = {
@@ -77,9 +239,6 @@ local cli_plugins = {
         hl = '',
       },
     },
-    config = function(_, opts)
-      require('nvim-lightbulb').setup(opts)
-    end,
   },
   {
     'dnlhc/glance.nvim',
@@ -88,23 +247,32 @@ local cli_plugins = {
     opts = function()
       return require('plugins.configs.glance')
     end,
-    config = function(_, opts)
-      require('glance').setup(opts)
-    end,
   },
   {
     'rmagatti/auto-session',
     opts = { log_level = 'error' },
-    config = function(_, opts)
-      require('auto-session').setup(opts)
+  },
+  {
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    lazy = true,
+    opts = {
+      enable_autocmd = false,
+    },
+    init = function()
+      if vim.fn.has('nvim-0.10') == 1 then
+        local get_option = vim.filetype.get_option
+        vim.filetype.get_option = function(filetype, option)
+          return option == 'commentstring'
+              and require('ts_context_commentstring.internal').calculate_commentstring()
+            or get_option(filetype, option)
+        end
+      end
     end,
   },
   {
     'echasnovski/mini.comment',
-    dependencies = {
-      'JoosepAlviste/nvim-ts-context-commentstring',
-    },
     version = false,
+    enabled = vim.fn.has('nvim-0.10') == 0,
     keys = {
       { 'gc', mode = { 'x', 'n' } },
     },
@@ -129,7 +297,6 @@ local cli_plugins = {
   {
     'echasnovski/mini.pairs',
     event = { 'InsertEnter' },
-    version = false,
     opts = {
       mappings = {
         [' '] = {
@@ -139,9 +306,6 @@ local cli_plugins = {
         },
       },
     },
-    config = function(_, opts)
-      require('mini.pairs').setup(opts)
-    end,
   },
   {
     'nvim-lualine/lualine.nvim',
@@ -150,36 +314,6 @@ local cli_plugins = {
     end,
     config = function(_, opts)
       require('lualine').setup(opts)
-    end,
-  },
-  {
-    'kyazdani42/nvim-tree.lua',
-    cmd = { 'NvimTreeToggle', 'NvimTreeFocus' },
-    opts = function()
-      return require('plugins.configs.nvim_tree')
-    end,
-    config = function(_, opts)
-      require('nvim-tree').setup(opts)
-    end,
-  },
-  {
-    'akinsho/toggleterm.nvim',
-    cmd = 'ToggleTerm',
-    opts = function()
-      return require('plugins.configs.toggleterm')
-    end,
-    config = function(_, opts)
-      require('toggleterm').setup(opts)
-
-      local Terminal = require('toggleterm.terminal').Terminal
-      local tab_terminal = Terminal:new({
-        direction = 'tab',
-        close_on_exit = false,
-      })
-
-      vim.keymap.set('n', '<leader>tt', function()
-        tab_terminal:toggle()
-      end)
     end,
   },
   { 'echasnovski/mini.bufremove', lazy = true },
@@ -192,6 +326,7 @@ local cli_plugins = {
         build = 'make',
         enabled = vim.fn.executable('make') == 1,
       },
+      'MunifTanjim/nui.nvim',
     },
     opts = function()
       return require('plugins.configs.telescope')
@@ -200,6 +335,7 @@ local cli_plugins = {
       local telescope = require('telescope')
       telescope.setup(opts)
       telescope.load_extension('fzf')
+      telescope.load_extension('smart_open')
     end,
   },
   {
@@ -221,31 +357,24 @@ local cli_plugins = {
         winblend = 0,
         border = { ' ', '─', ' ', ' ', ' ', ' ', ' ', ' ' },
         should_preview_cb = function(bufnr)
-          local ret = true
           local bufname = vim.api.nvim_buf_get_name(bufnr)
           local fsize = vim.fn.getfsize(bufname)
-          if fsize > 100 * 1024 then
-            -- skip file size greater than 100k
-            ret = false
+          if fsize > 150 * 1024 then
+            -- skip file size greater than 150kb
+            return false
           elseif bufname:match('^fugitive://') then
             -- skip fugitive buffer
-            ret = false
+            return false
           end
-          return ret
+          return true
         end,
       },
     },
-    config = function(_, opts)
-      require('bqf').setup(opts)
-    end,
   },
   {
     'lewis6991/gitsigns.nvim',
     opts = function()
       return require('plugins.configs.gitsigns')
-    end,
-    config = function(_, opts)
-      require('gitsigns').setup(opts)
     end,
   },
   {
@@ -330,9 +459,16 @@ local cli_plugins = {
   },
   {
     'stevearc/conform.nvim',
+    cmd = { 'Format', 'FormatEnable', 'FormatDisable' },
+    event = { 'BufWritePre' },
+    lazy = true,
     config = function()
       require('plugins.configs.conform').setup()
     end,
+  },
+  {
+    'davidmh/cspell.nvim',
+    dependencies = { 'Joakker/lua-json5' },
   },
   {
     'nvimtools/none-ls.nvim',
@@ -352,6 +488,7 @@ local cli_plugins = {
       { 'hrsh7th/cmp-nvim-lsp-signature-help' },
       {
         'zbirenbaum/copilot-cmp',
+        enabled = false,
         config = function()
           require('copilot_cmp').setup()
         end,
@@ -364,6 +501,7 @@ local cli_plugins = {
   {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
+    enabled = false,
     event = 'InsertEnter',
     opts = {
       copilot_node_command = vim.fn.expand('$HOME')

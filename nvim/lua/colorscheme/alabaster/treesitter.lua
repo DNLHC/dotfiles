@@ -81,6 +81,7 @@ local treesitter_migrate = function(p)
     ['symbol'] = 'TSSymbol',
 
     ['tag'] = 'TSTag',
+    ['tag.builtin'] = 'TSKeyword',
     ['tag.attribute'] = 'TSTagAttribute',
     ['tag.delimiter'] = 'TSTagDelimiter',
 

@@ -23,13 +23,13 @@ function M.get(config, p)
 
     CopilotAnnotation = { link = 'GhostText' },
     CopilotSuggestion = { link = 'GhostText' },
-    GhostText = { fg = p.fg4d },
+    GhostText = { fg = p.fg5d },
     -- Cursor = {},
     CursorColumn = { bg = p.bg1u },
     TermCursorNC = { fg = p.bg, bg = p.fg, ctermfg = '14', ctermbg = '15' },
     CursorLine = { bg = p.bg1u },
     CursorLineNr = { fg = p.fg },
-    LineNr = { fg = p.fg1d },
+    LineNr = { fg = p.fg5d },
     -- CursorLineSign = { bg = p.bg1u },
     CursorLineFold = { bg = p.bg1u },
     DarkenedPanel = { bg = groups.panel },
@@ -37,8 +37,12 @@ function M.get(config, p)
     DarkenedStatusline = { bg = groups.panel },
     DiffAdd = { bg = blend(p.diff.add, groups.background, 0.35) },
     DiffChange = { bg = blend(p.diff.change, groups.background, 0.35) },
+    DiffText = { bg = blend(p.diff.change, groups.background, 0.65) },
     DiffDelete = {
-      bg = blend(p.diff.remove, groups.background, 0.35),
+      -- bg = blend(p.diff.remove, groups.background, 0.35),
+      -- fg = blend(p.diff.remove, groups.background, 0.75),
+      bg = blend(groups.panel, groups.background, 0.8),
+      fg = p.bg3u,
     },
     DiffviewDiffDeleteHighlight = {
       bg = blend(p.diff.remove, groups.background, 0.8),
@@ -46,15 +50,43 @@ function M.get(config, p)
     DiffviewDiffAddHighlight = {
       bg = blend(p.diff.add, groups.background, 0.8),
     },
-    DiffText = { bg = blend(p.bg3u, groups.background, 0.8) },
     diffAdded = { link = 'DiffAdd' },
     diffChanged = { link = 'DiffChange' },
-    diffRemoved = { link = 'DiffDelete' },
+    diffRemoved = {
+      bg = blend(p.diff.remove, groups.background, 0.35),
+    },
+    diffLine = { fg = p.purple },
+    diffFile = { fg = p.blue },
+    diffIndexLine = { link = 'gitHash' },
+    gitHash = { fg = p.orange },
+    gitHashAbbrev = { link = 'gitHash' },
     DiffviewDiffDelete = {
       bg = blend(groups.panel, groups.background, 0.85),
       fg = blend(groups.panel, groups.background, 0.85),
     },
-    Directory = { fg = p.fg, bg = p.none },
+    NeogitDiffDelete = { link = 'diffRemoved' },
+    NeogitDiffDeleteHighlight = { link = 'NeogitDiffDelete' },
+    NeogitDiffDeleteCursor = { link = 'NeogitDiffDelete' },
+    NeogitDiffAdd = { link = 'diffAdded' },
+    NeogitDiffAddHighlight = { link = 'NeogitDiffAdd' },
+    NeogitDiffAddCursor = { link = 'NeogitDiffAdd' },
+    NeogitDiffContextCursor = { fg = p.none, bg = p.none },
+    NeogitDiffContextHighlight = { bg = groups.background },
+    NeogitDiffContext = { bg = groups.background },
+    NeogitHunkHeader = { bg = p.bg2u, fg = p.fg2d },
+    NeogitHunkHeaderCursor = { link = 'NeogitHunkHeader' },
+    NeogitHunkHeaderHighlight = { link = 'NeogitHunkHeader' },
+    NeogitChangeModified = { fg = p.orange },
+    NeogitChangeNewFile = { fg = p.green },
+    NeogitSubtleText = { fg = p.fg4d },
+    NeogitDiffHeader = { bg = p.none, fg = p.blue },
+    NeogitFilePath = { fg = p.fg },
+    NeogitDiffDeletions = { fg = p.red },
+    NeogitWinSeparator = { fg = p.bg2u, bg = p.bg2u },
+    NeogitSectionHeader = { bold = false, fg = p.blue },
+    NeogitChangeDeleted = { bold = false, fg = p.red },
+    NeogitCommitViewHeader = { bg = p.none, fg = p.fg },
+    Directory = { fg = p.blue },
     EndOfBuffer = { fg = p.fg6d },
     ErrorMsg = { fg = groups.error },
     FloatBorder = { fg = groups.float_bg, bg = groups.float_bg },
@@ -65,7 +97,7 @@ function M.get(config, p)
     IncSearch = { link = 'Search' },
     CurSearch = { bg = p.cur_search },
     HighlightedyankRegion = { bg = p.yank },
-    MatchParen = { bg = p.bg4u },
+    MatchParen = { bg = '#c7e6d3' },
     ModeMsg = { fg = p.fg, bold = true },
     MoreMsg = { fg = p.fg2d },
     NonText = { fg = p.bg2u },
@@ -105,7 +137,7 @@ function M.get(config, p)
 
     Boolean = { fg = p.purple },
     Character = { fg = p.fg },
-    Comment = { fg = groups.comment, italic = true },
+    Comment = { fg = groups.comment, italic = false },
     Conditional = { fg = groups.keyword },
     Constant = { fg = p.fg },
     Debug = { fg = groups.error },
@@ -199,6 +231,12 @@ function M.get(config, p)
     DiffviewFilePanelFilePanelPath = { fg = p.fg4d, bold = false },
     DiffviewFilePanelPath = { fg = p.fg4d, bold = false },
 
+    SpectreSearch = { link = 'diffRemoved' },
+    SpectreReplace = { link = 'diffAdded' },
+    SpectreDir = { fg = p.fg4d },
+    SpectreFile = { fg = p.fg },
+    SpectreBorder = { fg = groups.border },
+
     HarpoonBorder = { fg = p.bg2u, bg = p.bg2u },
     HarpoonWindow = { bg = p.bg2u },
 
@@ -214,16 +252,22 @@ function M.get(config, p)
     LspDiagnosticsUnderlineInformation = { sp = groups.info, undercurl = true },
     LspDiagnosticsUnderlineHint = { sp = groups.hint, undercurl = true },
 
+    OilCreate = { fg = p.green },
+
     -- vim.lsp.buf.document_highlight()
     LspReferenceText = { bg = p.bg3u },
     LspReferenceRead = { bg = p.bg3u },
     LspReferenceWrite = { bg = p.bg3u },
+
+    fugitiveHeading = { link = 'Marco' },
 
     -- lsp-highlight-codelens
     LspCodeLens = { fg = p.fg3d }, -- virtual text of code lens
     LspCodeLensSeparator = { fg = p.fg3d }, -- separator between two or more code lens
 
     MiniJump = { link = 'Search' },
+
+    MiniHipatternsNote = { fg = p.green },
 
     -- lewis6991/gitsigns.nvim
     GitSignsAdd = {
@@ -235,6 +279,13 @@ function M.get(config, p)
     GitSignsDelete = {
       fg = p.diff.remove,
     },
+    GitSignsDeletePreview = { link = 'diffRemoved' },
+    GitSignsDeleteInline = {
+      bg = blend(p.diff.remove, groups.background, 0.8),
+    },
+    GitSignsAddInline = {
+      bg = blend(p.diff.add, groups.background, 0.8),
+    },
     SignAdd = { link = 'GitSignsAdd' },
     SignChange = { link = 'GitSignsChange' },
     SignDelete = { link = 'GitSignsDelete' },
@@ -242,6 +293,7 @@ function M.get(config, p)
     BqfPreviewBorder = { fg = groups.border },
     BqfSign = { fg = p.red },
     qfPath = { fg = p.blue },
+    QuickFixLine = { bg = p.bg2u },
 
     -- kyazdani42/nvim-tree.lua
     NvimTreeEmptyFolderName = { fg = p.fg3d },
@@ -278,6 +330,9 @@ function M.get(config, p)
     -- luka-reineke/indent-blankline.nvim
     IndentBlanklineChar = { link = 'NonText' },
 
+    IndentLine = { link = 'NonText' },
+    IndentLineCurrent = { fg = p.bg5u },
+
     -- hrsh7th/nvim-cmp
     CmpItemAbbr = { fg = p.fg2d },
     CmpItemAbbrDeprecated = { fg = p.fg2d, strikethrough = true },
@@ -295,17 +350,26 @@ function M.get(config, p)
 
     -- nvim-telescope/telescope.nvim
     TelescopeBorder = { fg = groups.border, bg = p.bg },
-    TelescopeMatching = { fg = p.blue },
-    TelescopeNormal = { fg = p.fg3d, bg = p.bg },
-    TelescopeResultsFilePath = { fg = p.fg4d },
+    TelescopeMatching = { link = 'IncSearch' },
+    TelescopeNormal = { fg = p.fg, bg = p.bg },
+    TelescopeResultsFilePath = { fg = p.fg4d, bg = 'NONE' },
     TelescopePromptNormal = { fg = p.fg, bg = p.bg },
     TelescopePromptBorder = { fg = groups.border, bg = p.bg },
     TelescopePromptPrefix = { fg = p.red },
+    TelescopePromptCounter = { fg = p.fg },
     TelescopeSelection = { fg = p.fg, bg = p.bg1u },
     TelescopeSelectionCaret = { fg = p.fg, bg = p.bg2u },
     TelescopeTitle = { fg = p.fg3d, bg = p.bg },
     TelescopePreviewTitle = { bg = p.bg },
-    TelescopeMultiSelection = { bg = p.search, fg = p.fg },
+    TelescopeMultiSelection = { link = 'QuickFixLine' },
+    TelescopeFloatBorder = { fg = groups.border, bg = groups.background },
+
+    FzfLuaDirPart = { link = 'TelescopeResultsFilePath' },
+    FzfLuaBufNr = { link = 'Number' },
+    FzfLuaPathLineNr = { link = 'Number' },
+    FzfLuaHeaderText = { fg = p.fg4d },
+    FzfLuaHeaderBind = { fg = p.cyan },
+    FzfLuaPathColNr = { link = 'Number' },
 
     GlanceListFilepath = { fg = p.fg4d },
     GlanceListCursorLine = { bg = p.bg4u },

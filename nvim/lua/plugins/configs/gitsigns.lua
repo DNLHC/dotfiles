@@ -1,5 +1,5 @@
 return {
-  signcolumn = true,
+  signcolumn = false,
   attach_to_untracked = false,
   signs = {
     add = {

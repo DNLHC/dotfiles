@@ -66,3 +66,10 @@ if not vim.g.vscode then
     end,
   })
 end
+
+vim.api.nvim_create_autocmd('VimResized', {
+  group = augroup,
+  callback = function()
+    vim.cmd('tabdo wincmd =')
+  end,
+})

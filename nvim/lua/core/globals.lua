@@ -3,8 +3,8 @@ local M = {
 
   diagnostic_signs = { Error = 'E', Warn = 'W', Hint = 'H', Info = 'I' },
 
-  arrow_closed = '',
-  arrow_open = '',
+  chevron_right = '',
+  chevron_down = '',
 
   code_action_sign = '',
 }

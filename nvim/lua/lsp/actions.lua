@@ -1,12 +1,10 @@
 local M = {}
 
-function M.goto_definition(split_cmd)
+function M.goto_definition()
   local util = vim.lsp.util
   local log = require('vim.lsp.log')
-  local api = vim.api
   local reuse_win = false
 
-  -- note, this handler style is for neovim 0.5.1/0.6, if on 0.5, call with function(_, method, result)
   local handler = function(_, result, ctx)
     if result == nil or vim.tbl_isempty(result) then
       local _ = log.info() and log.info(ctx.method, 'No location found')
@@ -14,18 +12,17 @@ function M.goto_definition(split_cmd)
     end
     local client = vim.lsp.get_client_by_id(ctx.client_id)
 
-    if split_cmd then
-      vim.cmd(split_cmd)
+    local split_win = vim.fn.winnr('l')
+    local has_split = vim.fn.winnr() ~= split_win
+
+    if has_split then
+      vim.api.nvim_set_current_win(vim.fn.win_getid(split_win))
+    else
+      vim.cmd('vsplit')
     end
 
     if vim.tbl_islist(result) then
       util.jump_to_location(result[1], client.offset_encoding, reuse_win)
-
-      if #result > 1 then
-        util.set_qflist(util.locations_to_items(result, client.offset_encoding))
-        api.nvim_command('copen')
-        api.nvim_command('wincmd p')
-      end
     else
       util.jump_to_location(result, client.offset_encoding, reuse_win)
     end
