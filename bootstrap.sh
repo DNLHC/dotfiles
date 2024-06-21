@@ -6,7 +6,7 @@ mkdir -p $HOME/.config/fd
 ln -sr ./nvim $HOME/.config/
 ln -sr ./lf $HOME/.config/
 ln -sr ./ssh/config $HOME/.ssh/config
-ln -sr ./tmux.conf $HOME/tmux.conf
+ln -sr ./.tmux.conf $HOME/.tmux.conf
 ln -sr ./ignore $HOME/.config/fd
 ln -sr ./.vimrc $HOME/.vimrc
 ln -sr ./.gitconfig $HOME/.gitconfig
