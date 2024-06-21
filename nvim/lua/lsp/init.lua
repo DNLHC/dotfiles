@@ -2,6 +2,7 @@ local M = {}
 
 local disabled_servers = {
   'tsserver',
+  'volar',
 }
 
 function M.config()
@@ -42,7 +43,7 @@ function M.config()
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   local cmp_lsp = require('cmp_nvim_lsp')
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.completion.completionItem.snippetSupport = false
   capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 
   local options = {

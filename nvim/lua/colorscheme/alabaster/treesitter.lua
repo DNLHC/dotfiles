@@ -112,6 +112,10 @@ local treesitter_migrate = function(p)
     ['variable'] = 'TSVariable',
     ['variable.builtin'] = 'TSVariableBuiltin',
     ['method.vue'] = 'TSKeyword',
+    ['markup.raw.markdown_inline'] = 'LspReferenceText',
+
+    ['diff.minus.diff'] = 'diffRemoved',
+    ['diff.plus.diff'] = 'diffAdded',
   }
 
   for capture, hlgroup in pairs(map) do

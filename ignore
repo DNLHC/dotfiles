@@ -1,0 +1,12 @@
+**/.git/*
+**/.hg/*
+**/node_modules/*
+**/dist/*
+**/.svn/*
+**/CVS
+**/*.min.*
+**/package-lock.json
+**/yarn.lock
+**/*.log
+**/composer.lock
+**/.pnp.js

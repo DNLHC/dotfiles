@@ -2,6 +2,7 @@ local opt = vim.opt
 opt.smartcase = true
 opt.ignorecase = true
 vim.g.editorconfig = false
+
 local fn = vim.fn
 
 function _G.qftf(info)
@@ -72,7 +73,7 @@ if not vim.g.vscode then
   opt.termguicolors = true
   opt.hidden = true
   opt.grepformat = '%f:%l:%c:%m'
-  opt.grepprg = 'rg --vimgrep'
+  opt.grepprg = 'rg --vimgrep --smartcase --no-heading'
   opt.clipboard:append('unnamedplus')
   opt.backup = false
   opt.swapfile = false
@@ -81,7 +82,7 @@ if not vim.g.vscode then
   opt.splitright = true
   opt.cursorline = true
   opt.number = false
-  opt.scrolloff = 1
+  opt.scrolloff = 5
   opt.mouse = 'nvi'
   opt.inccommand = 'split'
   opt.completeopt = { 'menu', 'menuone', 'noselect' }

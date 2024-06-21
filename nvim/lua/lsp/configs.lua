@@ -13,6 +13,13 @@ local configs = {
       'less',
     },
   },
+  vuels = {
+    settings = {
+      vetur = {
+        ignoreProjectWarning = true,
+      },
+    },
+  },
   lua_ls = {
     settings = {
       Lua = {

@@ -1,4 +1,5 @@
 local present, cmp = pcall(require, 'cmp')
+
 if not present then
   return
 end
@@ -61,7 +62,13 @@ cmp.setup({
     end, { 'i', 's' }),
   }),
   sources = cmp.config.sources({
-    { name = 'nvim_lsp', keyword_length = 2 },
+    {
+      name = 'nvim_lsp',
+      keyword_length = 2,
+      entry_filter = function(entry)
+        return require('cmp').lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+      end,
+    },
     -- { name = 'copilot' },
     { name = 'nvim_lsp_signature_help' },
     { name = 'nvim_lua', keyword_length = 3 },

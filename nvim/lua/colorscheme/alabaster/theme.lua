@@ -55,9 +55,11 @@ function M.get(config, p)
     diffRemoved = {
       bg = blend(p.diff.remove, groups.background, 0.35),
     },
-    diffLine = { fg = p.purple },
+    diffLine = { fg = p.purple, bold = true },
     diffFile = { fg = p.blue },
-    diffIndexLine = { link = 'gitHash' },
+    diffNewFile = { link = 'diffAdded' },
+    diffOldFile = { link = 'diffRemoved' },
+    -- diffIndexLine = { link = 'gitHash' },
     gitHash = { fg = p.orange },
     gitHashAbbrev = { link = 'gitHash' },
     DiffviewDiffDelete = {
@@ -279,6 +281,9 @@ function M.get(config, p)
     GitSignsDelete = {
       fg = p.diff.remove,
     },
+    GitSignsTopdelete = { link = 'GitSignsDelete' },
+    GitSignsChangedelete = { link = 'GitSignsChange' },
+    GitSignsUntracked = { link = 'GitSignsAdd' },
     GitSignsDeletePreview = { link = 'diffRemoved' },
     GitSignsDeleteInline = {
       bg = blend(p.diff.remove, groups.background, 0.8),
@@ -336,7 +341,7 @@ function M.get(config, p)
     -- hrsh7th/nvim-cmp
     CmpItemAbbr = { fg = p.fg2d },
     CmpItemAbbrDeprecated = { fg = p.fg2d, strikethrough = true },
-    CmpItemAbbrMatch = { fg = p.blue },
+    CmpItemAbbrMatch = { fg = p.blue, bold = true },
     CmpItemAbbrMatchFuzzy = { fg = p.fg },
     CmpItemKind = { fg = groups.keyword },
     CmpItemKindClass = { link = 'Type' },

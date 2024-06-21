@@ -1,6 +1,6 @@
 ---@diagnostic disable: different-requires
 local common_plugins = {
-  'tpope/vim-repeat',
+  { 'tpope/vim-repeat', event = 'VeryLazy' },
   {
     'kylechui/nvim-surround',
     keys = {
@@ -46,49 +46,81 @@ local cli_plugins = {
     'lambdalisue/vim-suda',
     cmd = { 'SudaRead', 'SudaWrite' },
   },
-  {
-    'danielfalk/smart-open.nvim',
-    branch = '0.2.x',
-    dependencies = {
-      'kkharji/sqlite.lua',
-    },
-  },
   'lewis6991/impatient.nvim',
-  'ojroques/nvim-osc52',
-  'tpope/vim-sleuth',
-  { 'tpope/vim-fugitive' },
+  { 'ojroques/nvim-osc52', event = 'VeryLazy' },
+  { 'tpope/vim-sleuth', event = 'VeryLazy' },
+  { 'tpope/vim-fugitive', event = 'VeryLazy' },
+  {
+    'CopilotC-Nvim/CopilotChat.nvim',
+    event = 'VeryLazy',
+    branch = 'canary',
+    config = function()
+      require('CopilotChat').setup({
+        proxy = 'socks5://localhost:14040',
+      })
+    end,
+  },
+  {
+    'github/copilot.vim',
+    init = function()
+      vim.g.copilot_node_command = vim.fn.expand('$HOME')
+        .. '/.volta/tools/image/node/20.14.0/bin/node'
+      vim.g.copilot_proxy_strict_ssl = false
+      vim.g.copilot_proxy = 'http://localhost:8123'
+    end,
+  },
   {
     'ibhagwan/fzf-lua',
+    event = 'VeryLazy',
     config = function()
-      local actions = require('fzf-lua').actions
+      local fzf = require('fzf-lua')
+      local actions = fzf.actions
 
-      local function find_files_in_path(path)
-        local _path = path or vim.fn.input('cwd: ', '', 'dir')
-        require('fzf-lua').files({ cwd = _path })
-      end
-
-      local function live_grep_glob_in_path(path)
-        local _path = path or vim.fn.input('cwd: ', '', 'dir')
-        require('fzf-lua').files({ cwd = _path })
-      end
+      vim.api.nvim_create_user_command('Find', function(event)
+        local cwd = vim.fn.fnamemodify(event.args, ':p:h')
+        if event.bang then
+          fzf.live_grep_glob({ cwd = cwd })
+        else
+          fzf.files({ cwd = cwd })
+        end
+      end, {
+        nargs = 1,
+        complete = 'dir',
+        bang = true,
+      })
 
       vim.keymap.set('n', '<leader>/', '<CMD>FzfLua live_grep_glob<CR>')
       vim.keymap.set('n', '<leader>bb', '<CMD>FzfLua buffers<CR>')
       vim.keymap.set('n', '<leader><leader>', '<CMD>FzfLua resume<CR>')
-      vim.keymap.set('n', '<C-f>', '<CMD>FzfLua files<CR>')
-      vim.keymap.set('n', '<leader>sf', find_files_in_path)
-      vim.keymap.set('n', '<leader>?', live_grep_glob_in_path)
+      vim.keymap.set('n', '<C-p>', '<CMD>FzfLua files<CR>')
       vim.keymap.set('n', '<C-g>', '<CMD>FzfLua grep_cword<CR>')
       vim.keymap.set('v', '<C-g>', '<CMD>FzfLua grep_visual<CR>')
 
-      require('fzf-lua').setup({
+      local ignore_glob = {
+        '**/.git/*',
+        '**/.hg/*',
+        '**/node_modules/*',
+        '**/dist/*',
+        '**/.svn/*',
+        '**/CVS',
+        '**/*.min.*',
+        '**/package-lock.json',
+        '**/yarn.lock',
+        '**/*.log',
+        '**/composer.lock',
+        '**/.pnp.js',
+      }
+
+      fzf.setup({
         defaults = {
           file_icons = false,
           -- git_icons = true,
+          multiline = 1,
           prompt = 'pattern: ',
           cwd_prompt = false,
           no_header = true,
           input_prompt = 'pattern: ',
+          formatter = { 'path.filename_first', 2 },
         },
         fzf_opts = {
           ['--pointer'] = '▌',
@@ -112,20 +144,19 @@ local cli_plugins = {
           search = 'IncSearch',
         },
         fzf_colors = {
-          ['fg'] = { 'fg', 'TelescopeNormal' },
+          ['fg'] = { 'fg', 'Normal' },
           ['bg'] = { 'bg', 'TelescopeNormal' },
-          ['hl'] = { 'fg', 'Function' },
-          ['fg+'] = { 'fg', 'Normal' },
+          ['hl'] = { 'fg', 'Function', 'bold' },
+          ['fg+'] = { 'fg', 'Normal', 'regular' },
           ['bg+'] = { 'bg', 'TelescopeSelection' },
-          ['hl+'] = { 'fg', 'Function' },
+          ['hl+'] = { 'fg', 'Function', 'bold' },
           ['info'] = { 'fg', 'TelescopeNormal' },
-          -- conflicts with rg bg colors `path` and `line`
           -- ['selected-bg'] = { 'bg', 'TelescopeMultiSelection' },
           ['border'] = { 'fg', 'TelescopeBorder' },
           ['gutter'] = { 'bg', 'TelescopeNormal' },
-          ['query'] = { 'fg', 'TelescopePromptNormal' },
+          ['query'] = { 'fg', 'TelescopePromptNormal', 'regular' },
           ['separator'] = { 'bg', 'Normal' },
-          ['prompt'] = { 'fg', 'TelescopePromptPrefix' },
+          ['prompt'] = { 'fg', 'TelescopePromptPrefix', 'regular' },
           ['pointer'] = { 'fg', 'TelescopeSelectionCaret' },
           ['marker'] = { 'fg', 'TelescopeSelectionCaret' },
           ['header'] = { 'fg', 'TelescopeTitle' },
@@ -146,13 +177,6 @@ local cli_plugins = {
         },
         keymap = {
           builtin = {
-            ['<F1>'] = 'toggle-help',
-            ['<F2>'] = 'toggle-fullscreen',
-            -- Only valid with the 'builtin' previewer
-            ['<F3>'] = 'toggle-preview-wrap',
-            ['<F4>'] = 'toggle-preview',
-            ['<F5>'] = 'toggle-preview-ccw',
-            ['<F6>'] = 'toggle-preview-cw',
             ['<C-d>'] = 'preview-page-down',
             ['<C-u>'] = 'preview-page-up',
             ['<S-left>'] = 'preview-page-reset',
@@ -164,9 +188,6 @@ local cli_plugins = {
             ['ctrl-a'] = 'beginning-of-line',
             ['ctrl-e'] = 'end-of-line',
             ['alt-a'] = 'toggle-all',
-            -- Only valid with fzf previewers (bat/cat/git/etc)
-            ['f3'] = 'toggle-preview-wrap',
-            ['f4'] = 'toggle-preview',
             ['ctrl-d'] = 'preview-page-down',
             ['ctrl-u'] = 'preview-page-up',
             ['ctrl-q'] = 'select-all+accept',
@@ -187,16 +208,43 @@ local cli_plugins = {
             ['ctrl-t'] = actions.buf_tabedit,
           },
         },
-        grep = {
-          -- formatter = 'path.filename_first',
-          multiline = 1,
+        files = {
           git_icons = false,
+        },
+        buffers = {
+          git_icons = false,
+        },
+        grep = {
+          git_icons = false,
+          rg_opts = table.concat({
+            '--column',
+            '--line-number',
+            '--no-heading',
+            '--color=always',
+            '--trim',
+            '--smart-case',
+            '--max-columns=4096',
+            '--colors=line:fg:magenta',
+            '--colors=line:style:nobold',
+            '--colors=column:fg:magenta',
+            '--colors=column:style:nobold',
+            '--colors=path:fg:white',
+            '--colors=path:style:nobold',
+            '--colors=match:fg:white',
+            '--colors=match:bg:240,235,180',
+            '--colors=match:style:nobold',
+            '-g',
+            string.format('!{%s}', table.concat(ignore_glob, ',')),
+            '-e',
+          }, ' '),
         },
       })
     end,
   },
   {
     'stevearc/oil.nvim',
+    cmd = 'Oil',
+    keys = { '<C-n>' },
     config = function()
       require('oil').setup({
         columns = {},
@@ -221,24 +269,12 @@ local cli_plugins = {
   {
     'mbbill/undotree',
     cmd = { 'UndotreeToggle' },
-    config = function()
+    init = function()
       vim.g.undotree_SetFocusWhenToggle = 1
       vim.g.undotree_HelpLine = 0
       vim.g.undotree_DiffpanelHeight = 15
       vim.g.undotree_SplitWidth = 35
     end,
-  },
-  {
-    'kosayoda/nvim-lightbulb',
-    enabled = false,
-    opts = {
-      autocmd = { enabled = true },
-      sign = {
-        enable = true,
-        text = require('core.globals').code_action_sign,
-        hl = '',
-      },
-    },
   },
   {
     'dnlhc/glance.nvim',
@@ -254,7 +290,7 @@ local cli_plugins = {
   },
   {
     'JoosepAlviste/nvim-ts-context-commentstring',
-    lazy = true,
+    event = 'VeryLazy',
     opts = {
       enable_autocmd = false,
     },
@@ -267,31 +303,6 @@ local cli_plugins = {
             or get_option(filetype, option)
         end
       end
-    end,
-  },
-  {
-    'echasnovski/mini.comment',
-    version = false,
-    enabled = vim.fn.has('nvim-0.10') == 0,
-    keys = {
-      { 'gc', mode = { 'x', 'n' } },
-    },
-    opts = function()
-      return {
-        options = {
-          custom_commentstring = function()
-            return require('ts_context_commentstring').calculate_commentstring()
-              or vim.bo.commentstring
-          end,
-        },
-      }
-    end,
-    config = function(_, opts)
-      vim.g.skip_ts_context_commentstring_module = true
-      require('ts_context_commentstring').setup({
-        enable_autocmd = false,
-      })
-      require('mini.comment').setup(opts)
     end,
   },
   {
@@ -317,27 +328,6 @@ local cli_plugins = {
     end,
   },
   { 'echasnovski/mini.bufremove', lazy = true },
-  {
-    'nvim-telescope/telescope.nvim',
-    cmd = 'Telescope',
-    dependencies = {
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make',
-        enabled = vim.fn.executable('make') == 1,
-      },
-      'MunifTanjim/nui.nvim',
-    },
-    opts = function()
-      return require('plugins.configs.telescope')
-    end,
-    config = function(_, opts)
-      local telescope = require('telescope')
-      telescope.setup(opts)
-      telescope.load_extension('fzf')
-      telescope.load_extension('smart_open')
-    end,
-  },
   {
     'kevinhwang91/nvim-bqf',
     ft = 'qf',
@@ -373,13 +363,14 @@ local cli_plugins = {
   },
   {
     'lewis6991/gitsigns.nvim',
+    event = 'VeryLazy',
     opts = function()
       return require('plugins.configs.gitsigns')
     end,
   },
   {
     'echasnovski/mini.hipatterns',
-    event = 'BufReadPre',
+    event = 'VeryLazy',
     version = false,
     config = function()
       local hipatterns = require('mini.hipatterns')
@@ -467,6 +458,7 @@ local cli_plugins = {
     end,
   },
   {
+    event = 'VeryLazy',
     'davidmh/cspell.nvim',
     dependencies = { 'Joakker/lua-json5' },
   },
@@ -486,29 +478,9 @@ local cli_plugins = {
       { 'hrsh7th/cmp-path' },
       { 'hrsh7th/cmp-cmdline' },
       { 'hrsh7th/cmp-nvim-lsp-signature-help' },
-      {
-        'zbirenbaum/copilot-cmp',
-        enabled = false,
-        config = function()
-          require('copilot_cmp').setup()
-        end,
-      },
     },
     config = function()
       require('plugins.configs.cmp')
-    end,
-  },
-  {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    enabled = false,
-    event = 'InsertEnter',
-    opts = {
-      copilot_node_command = vim.fn.expand('$HOME')
-        .. '/.volta/tools/image/node/20.9.0/bin/node',
-    },
-    config = function(_, opts)
-      require('copilot').setup(opts)
     end,
   },
 }

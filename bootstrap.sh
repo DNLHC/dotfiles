@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
 mkdir -p $HOME/.ssh
+mkdir -p $HOME/.config/fd
+
 ln -sr ./nvim $HOME/.config/
 ln -sr ./lf $HOME/.config/
 ln -sr ./ssh/config $HOME/.ssh/config
 ln -sr ./tmux.conf $HOME/tmux.conf
+ln -sr ./ignore $HOME/.config/fd
 ln -sr ./.vimrc $HOME/.vimrc
 ln -sr ./.gitconfig $HOME/.gitconfig
 ln -sr ./.bash_aliases $HOME/.bash_aliases
