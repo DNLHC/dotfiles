@@ -58,7 +58,7 @@ function _G.qftf(info)
   return ret
 end
 
-vim.o.qftf = '{info -> v:lua._G.qftf(info)}'
+-- vim.o.qftf = '{info -> v:lua._G.qftf(info)}'
 
 if not vim.g.vscode then
   vim.g.cursorhold_updatetime = 250
@@ -87,9 +87,8 @@ if not vim.g.vscode then
   opt.inccommand = 'split'
   opt.completeopt = { 'menu', 'menuone', 'noselect' }
   opt.pumheight = 12
-  opt.signcolumn = 'yes:1'
   opt.backspace = 'indent,eol,start'
-  opt.laststatus = 2
+  opt.laststatus = 1
   opt.updatetime = 300
   opt.foldlevel = 10
   opt.foldnestmax = 3
@@ -103,6 +102,24 @@ if not vim.g.vscode then
   opt.spelllang = 'en_us,ru'
   opt.spell = false
   opt.numberwidth = 3
+
+  function _G.get_autoformat_status()
+    if vim.b.disable_autoformat or vim.g.disable_autoformat then
+      return 'F-'
+    end
+    return 'F+'
+  end
+
+  function _G.fugitive_status()
+    if vim.fn.exists('g:loaded_fugitive') == 1 then
+      -- remove surrounding square brackets
+      return string.sub(vim.fn['fugitive#Statusline'](), 2, -2)
+    end
+    return ''
+  end
+
+  opt.statusline =
+    [[ %{v:lua.fugitive_status()} %f %h%w%m%r%=%-1.(%{v:lua.get_autoformat_status()} (%l,%c)%V%)]]
   opt.diffopt:append({
     'filler',
     'context:5',
@@ -132,13 +149,14 @@ if not vim.g.vscode then
   opt.path = { '.', '**' }
 
   if vim.fn.has('nvim-0.9.0') == 1 then
-    opt.statuscolumn = '%=%l%s'
+    opt.statuscolumn = '%=%l%s '
     opt.splitkeep = 'screen'
 
     vim.filetype.add({
       extension = {
         pcss = 'scss',
         webc = 'html',
+        http = 'http',
       },
       filename = {
         ['.eslintrc'] = 'json',

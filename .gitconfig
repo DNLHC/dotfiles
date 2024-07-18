@@ -4,7 +4,7 @@
 [core]
 	editor = nvim
 	pager = less --tabs 2 -RFX
-	; pager = diff-so-fancy | less --tabs=4 -RFX
+	whitespace = ignore-all
 [color]
 	ui = true
 [color "diff-highlight"]
@@ -13,16 +13,11 @@
 	newNormal = green
 	oldHighlight = red
 [color "diff"]
-	meta = yellow
 	frag = magenta bold
 	commit = yellow bold
 	old = red
 	new = green
 	whitespace = red reverse
-[diff-so-fancy]
-	stripLeadingSymbols = false
-	markEmptyLines = false
-
 [column]
 	ui = auto
 [branch]

@@ -151,9 +151,11 @@ if not vim.g.vscode then
   map('n', '<leader>ol', '<CMD>set cursorline!<CR>')
   map('n', '<leader>of', function()
     vim.g.disable_autoformat = not vim.g.disable_autoformat
+    vim.cmd.redrawstatus()
   end)
   map('n', '<leader>oF', function()
     vim.b.disable_autoformat = not vim.b.disable_autoformat
+    vim.cmd.redrawstatus()
   end)
   map('n', '<leader>od', toggle_diagnostics)
   map('n', '<leader>oh', function()

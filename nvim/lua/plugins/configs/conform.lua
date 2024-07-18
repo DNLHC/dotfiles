@@ -77,6 +77,7 @@ M.setup = function()
     else
       vim.g.disable_autoformat = true
     end
+    vim.cmd('redrawstatus!')
   end, {
     desc = 'Disable autoformat-on-save',
     bang = true,
@@ -85,6 +86,7 @@ M.setup = function()
   vim.api.nvim_create_user_command('FormatEnable', function()
     vim.b.disable_autoformat = false
     vim.g.disable_autoformat = false
+    vim.cmd('redrawstatus!')
   end, {
     desc = 'Re-enable autoformat-on-save',
   })

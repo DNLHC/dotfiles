@@ -48,7 +48,7 @@ local cli_plugins = {
   },
   'lewis6991/impatient.nvim',
   { 'ojroques/nvim-osc52', event = 'VeryLazy' },
-  { 'tpope/vim-sleuth', event = 'VeryLazy' },
+  { 'tpope/vim-sleuth' },
   { 'tpope/vim-fugitive', event = 'VeryLazy' },
   {
     'CopilotC-Nvim/CopilotChat.nvim',
@@ -93,7 +93,7 @@ local cli_plugins = {
       vim.keymap.set('n', '<leader>bb', '<CMD>FzfLua buffers<CR>')
       vim.keymap.set('n', '<leader><leader>', '<CMD>FzfLua resume<CR>')
       vim.keymap.set('n', '<C-p>', '<CMD>FzfLua files<CR>')
-      vim.keymap.set('n', '<C-g>', '<CMD>FzfLua grep_cword<CR>')
+      -- vim.keymap.set('n', '<C-g>', '<CMD>FzfLua grep_cword<CR>')
       vim.keymap.set('v', '<C-g>', '<CMD>FzfLua grep_visual<CR>')
 
       local ignore_glob = {
@@ -209,30 +209,21 @@ local cli_plugins = {
           },
         },
         files = {
-          git_icons = false,
+          git_icons = true,
         },
         buffers = {
           git_icons = false,
         },
         grep = {
           git_icons = false,
+          RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
           rg_opts = table.concat({
             '--column',
             '--line-number',
             '--no-heading',
             '--color=always',
-            '--trim',
             '--smart-case',
             '--max-columns=4096',
-            '--colors=line:fg:magenta',
-            '--colors=line:style:nobold',
-            '--colors=column:fg:magenta',
-            '--colors=column:style:nobold',
-            '--colors=path:fg:white',
-            '--colors=path:style:nobold',
-            '--colors=match:fg:white',
-            '--colors=match:bg:240,235,180',
-            '--colors=match:style:nobold',
             '-g',
             string.format('!{%s}', table.concat(ignore_glob, ',')),
             '-e',
@@ -317,15 +308,6 @@ local cli_plugins = {
         },
       },
     },
-  },
-  {
-    'nvim-lualine/lualine.nvim',
-    opts = function()
-      return require('plugins.configs.lualine')
-    end,
-    config = function(_, opts)
-      require('lualine').setup(opts)
-    end,
   },
   { 'echasnovski/mini.bufremove', lazy = true },
   {

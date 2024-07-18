@@ -123,7 +123,7 @@ function M.get(config, p)
     SpellLocal = { sp = p.fg3d, undercurl = true },
     SpellRare = { sp = p.fg3d, undercurl = true },
     SignColumn = { fg = p.fg },
-    StatusLine = { fg = p.fg3d, bg = groups.status_line },
+    StatusLine = { fg = p.fg2d, bg = groups.status_line },
     StatusLineNC = { fg = p.fg4d, bg = groups.status_line },
     StatusLineTerm = { link = 'StatusLine' },
     StatusLineTermNC = { link = 'StatusLineNC' },

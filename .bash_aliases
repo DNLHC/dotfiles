@@ -15,6 +15,10 @@ alias removezone='find . -name "*:Zone.Identifier" -type f -delete'
 alias explorer.exe='/mnt/c/Windows/explorer.exe'
 alias code='code-insiders'
 
+HTTPS_PROXY=http://localhost:8123
+
+alias copilot="HTTPS_PROXY=$HTTPS_PROXY gh copilot"
+
 # git shortcuts
 alias gst='git status'
 alias ga='git add -A .'
